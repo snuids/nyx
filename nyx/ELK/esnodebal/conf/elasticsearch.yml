@@ -1,0 +1,13 @@
+cluster.name: "nyxdata-cluster"
+network.host: 0.0.0.0
+
+discovery.zen.minimum_master_nodes: 1
+discovery.zen.ping.unicast.hosts: ["esnode1", "esnode2", "esnode3"]
+
+node.max_local_storage_nodes: 3
+node.name: esnodebal
+node.data: true
+node.master: true
+
+reindex.remote.whitelist: app.rpinum.be:9200
+

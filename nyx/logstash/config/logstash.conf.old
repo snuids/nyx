@@ -1,0 +1,94 @@
+input {
+  tcp {
+    port => 5001
+    codec => json
+    type => tcp
+    add_field => {
+        "server" => 1
+        "isource" => "tcp"
+    }
+  }
+  file {
+    type => "camelworker"
+    start_position => "end"
+    path => [ "/var/log/logs/camelworker1.log" ]
+    tags => ["camelworker1"]
+    add_field => {
+        "program" => "camelworker1"
+        "server" => 1
+        "isource" => "camelworker"
+    }
+  }
+  file {
+    type => "camelworker"
+    start_position => "end"
+    path => [ "/var/log/logs/camelworker2.log" ]
+    tags => ["camelworker2"]
+    add_field => {
+        "program" => "camelworker2"
+        "server" => 1
+        "isource" => "camelworker"
+    }
+  }
+  file {
+    type => "camelworker"
+    start_position => "end"
+    path => [ "/var/log/logs/nginx_access.log" ]
+    tags => ["nginx"]
+    add_field => {
+        "program" => "nginx"
+        "server" => 1
+        "isource" => "nginx"
+    }
+  }
+
+
+ }
+
+filter {
+  if [isource] == "camelworker" {
+    grok {
+    patterns_dir => "/usr/share/logstash/config/patterns"
+    match => { "message" => "%{CAMELWORKER}" }
+    remove_tag => ["_grokparsefailure"]
+    }
+  }
+  if [isource] == "nginx" {
+  grok {
+      match => { "message" => ["%{IPORHOST:[nginx][access][remote_ip]} - %{DATA:[nginx][access][user_name]} \[%{HTTPDATE:[nginx][access][time]}\] \"%{WORD:[nginx][access][method]} %{DATA:[nginx][access][url]} HTTP/%{NUMBER:[nginx][access][http_version]}\" %{NUMBER:[nginx][access][response_code]} %{NUMBER:[nginx][access][body_sent][bytes]} \"%{DATA:[nginx][access][referrer]}\" \"%{DATA:[nginx][access][agent]}\""] }
+      remove_field => "message"
+   }
+   mutate {
+      rename => { "@timestamp" => "read_timestamp" }
+   }
+   date {
+      match => [ "[nginx][access][time]", "dd/MMM/YYYY:H:m:s Z" ]
+      remove_field => "[nginx][access][time]"
+   }
+   useragent {
+      source => "[nginx][access][agent]"
+      target => "[nginx][access][user_agent]"
+      remove_field => "[nginx][access][agent]"
+   }
+   geoip {
+      source => "[nginx][access][remote_ip]"
+      target => "[nginx][access][geoip]"
+   }
+  }
+}
+
+output {
+  if [isource] == "camelworker" and "ERROR" in [loglevel]
+  {
+    elasticsearch { hosts => ["esnodebal:9200"] } 
+  }      
+  if [isource] == "tcp"
+  {      
+    elasticsearch { hosts => ["esnodebal:9200"] }
+  }
+  if [isource] == "nginx"
+  {
+    elasticsearch { hosts => ["esnodebal:9200"] }
+  }
+}
+

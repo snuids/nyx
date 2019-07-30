@@ -1,0 +1,451 @@
+version: '2'
+services:
+
+
+#############################
+  anaconda:
+    image: snuids/anaconda:v0.0.3
+    container_name: anacondab
+    environment:
+      - TZ=Europe/Paris        
+    volumes:
+      - /home/nyx/reportrunnerold:/opt/notebooks/reportsold
+      - /home/nyx/reportrunner:/opt/notebooks/reports
+      - /home/nyx/camelworkers:/opt/notebooks/camelworkers
+      - /home/nyx/logs:/opt/notebooks/logs
+      - /home/nyx/elastalert/rules:/opt/notebooks/elastalert
+      - /home/import/mails:/opt/notebooks/mails
+      - /home/nyx/notebooks:/opt/notebooks/notebooks
+
+
+##############################
+  nodered:
+    image: snuids/nodered:v0.20.3-v10
+    container_name: nodered
+    environment:
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+
+############################################################################################
+  logioweb:
+    hostname: air-logs
+    container_name: logioweb
+    image: 'blacklabelops/logio:latest'
+    volumes:
+      - '/opt/server'
+
+#############################################################################################
+  harvester:
+    image: 'blacklabelops/logio:latest'
+    container_name: harvester
+    environment:
+      - 'DELAYED_START=10'
+      - 'LOGIO_HARVESTER_NODENAME=RPinumLogs'
+      - 'LOGIO_HARVESTER1STREAMNAME=RestAPI' 
+      - 'LOGIO_HARVESTER1LOGSTREAMS=/var/log/logs' 
+      - 'LOGIO_HARVESTER1FILEPATTERN=RestAPIG.log'
+      - 'LOGIO_HARVESTER2STREAMNAME=CamelWorker1'
+      - 'LOGIO_HARVESTER2LOGSTREAMS=/var/log/logs'
+      - 'LOGIO_HARVESTER2FILEPATTERN=camelworker1.log'
+      - 'LOGIO_HARVESTER3STREAMNAME=ElastAlert'
+      - 'LOGIO_HARVESTER3LOGSTREAMS=/var/log/logs'
+      - 'LOGIO_HARVESTER3FILEPATTERN=ElastAlert.log'
+      - 'LOGIO_HARVESTER4STREAMNAME=XLSImporter'
+      - 'LOGIO_HARVESTER4LOGSTREAMS=/var/log/logs'
+      - 'LOGIO_HARVESTER4FILEPATTERN=XLS_IMPORTER.log'
+      - 'LOGIO_HARVESTER5STREAMNAME=ReportRunner1'
+      - 'LOGIO_HARVESTER5LOGSTREAMS=/var/log/logs'
+      - 'LOGIO_HARVESTER5FILEPATTERN=ReportRunner_1.log'
+
+    volumes:
+      - '/home/nyx/logs/:/var/log/logs/'
+    links:
+      - logioweb:logio
+    user: root
+    command: harvester
+
+################################################################################################
+
+  nyx_ui:
+    image: snuids/nyx_ui:v2.1.0
+    container_name: nyx_ui
+    restart: always
+
+################################################################################################
+
+  nyx_mobile:
+    image: snuids/nyx_mobile:v1.0.0
+    ports:
+      - 7654:7654
+    container_name: nyx_mobile
+    restart: always
+
+################################################################################################
+
+  nyx_restapi: 
+  #image: snuids/nyx_restapi:v0.0.47b
+    image: snuids/nyx_restapi:v1.0.26
+    container_name: nyx_restapi
+    command: gunicorn -b 0.0.0.0:8000 --log-config restapilog.conf -w 3 nyx_rest_api_plus:app
+    restart: always
+    environment:
+      - REDIS_IP=redis
+      - USE_LOGSTASH=true
+      - AMQC_URL=amqc
+      - AMQC_LOGIN=admin
+      - AMQC_PASSWORD=nyxamqpassword
+      - AMQC_PORT=61613
+      - ELK_URL=esnodebal
+      - ELK_LOGIN=
+      - ELK_PASSWORD=
+      - ELK_PORT=9200
+      - ELK_SSL=false
+      - OUTPUT_FOLDER=./outputs/
+      - OUTPUT_URL=https://YOURSERVER/generatedreports/rapi/
+      - TZ=Europe/Paris
+      - WELCOMEMESSAGE=NYX Platform
+      - ICON=paper-plane
+
+      - PG_LOGIN=nyx
+      - PG_PASSWORD=postgrespass
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_DATABASE=nyx      
+
+    volumes:
+      - '/home/nyx/logs/:/opt/sources/logs/'
+      - "/home/nyx/generatedreports/rapi/:/opt/sources/outputs/"
+
+################################################################################################
+
+  nyx_xlsimporter:
+    image: snuids/nyx_xlsimport:v0.0.1a 
+    container_name: nyx_xlsimporter
+    restart: always
+    environment:
+      - USE_LOGSTASH=true
+      - AMQC_URL=amqc
+      - AMQC_LOGIN=admin
+      - AMQC_PASSWORD=nyxamqpassword
+      - AMQC_PORT=61613
+
+      - ELK_URL=esnodebal
+      - ELK_LOGIN=
+      - ELK_PASSWORD=
+      - ELK_PORT=9200
+      - ELK_SSL=false
+    volumes:
+      - '/home/nyx/logs/:/opt/sources/logs/'
+
+################################################################################################
+
+  nyx_reportrunner_1:
+          #    image: snuids/nyx_reportrunner:v0.0.5
+    image: snuids/nyx_reportrunner:v1.0.8
+    container_name: nyx_reportrunner_1
+    restart: always
+    environment:
+      - USE_LOGSTASH=true
+      - AMQC_URL=amqc
+      - AMQC_LOGIN=admin
+      - AMQC_PASSWORD=nyxamqpassword
+      - AMQC_PORT=61613
+
+      - JDBC_DS=jdbc:elasticsearch://esnodebal:9200
+
+      - ELK_URL=esnodebal
+      - ELK_LOGIN=
+      - ELK_PASSWORD=
+      - ELK_PORT=9200
+      - ELK_SSL=false
+      - TZ=Europe/Paris
+      - RUNNER=1
+      - REPORT_URL=https://YOURSERVER/generatedreports
+    volumes:
+      - '/home/nyx/logs/:/opt/sources/logs/'
+      - '/home/nyx/generatedreports/:/opt/sources/generated/'
+      - '/home/nyx/reportrunner/:/opt/sources/reports'
+
+################################################################################################
+
+  nyx_scheduler:
+    image: snuids/nyx_reportscheduler:v0.0.4
+    container_name: nyx_reportscheduler
+    restart: always
+    environment:
+      - USE_LOGSTASH=true
+      - AMQC_URL=amqc
+      - AMQC_LOGIN=admin
+      - AMQC_PASSWORD=nyxamqpassword
+      - AMQC_PORT=61613
+
+      - ELK_URL=esnodebal
+      - ELK_LOGIN=
+      - ELK_PASSWORD=
+      - ELK_PORT=9200
+      - ELK_SSL=false
+      - TZ=Europe/Paris
+    volumes:
+      - '/home/nyx/logs/:/opt/sources/logs/'
+      - '/home/nyx/generatedreports/:/opt/sources/generated/'
+      - '/home/nyx/reportrunner/:/opt/sources/reports'
+
+
+################################################################################################
+  amqc:
+    image: snuids/activemq-amqcmonitoring:v5.15.2f
+#    image: snuids/activemq-amqcmonitoring:v5.15.2f
+    ports:
+#      - "8161:8161"
+      - "61616:61616"
+      - "61614:61614"
+      - "61613:61613"
+    container_name: amqc
+    restart: always
+    environment:
+      - ACTIVEMQ_ADMIN_LOGIN=admin
+      - ACTIVEMQ_ADMIN_PASSWORD=nyxamqpassword
+
+################################################
+
+
+  nyx_rest_helper:
+    image: snuids/nyx_rest_helper:v0.0.3
+    container_name: nyx_rest_helper
+    restart: always
+    environment:
+      - REDIS_IP=redis
+      - USE_LOGSTASH=true
+      - AMQC_URL=amqc
+      - AMQC_LOGIN=admin
+      - AMQC_PASSWORD=nyxamqpassword
+      - AMQC_PORT=61613
+
+      - ELK_URL=esnodebal
+      - ELK_LOGIN=
+      - ELK_PASSWORD=
+      - ELK_PORT=9200
+      - ELK_SSL=false
+
+      - OUTPUT_FOLDER=./outputs/
+      - OUTPUT_URL=https://app.nyx-ds.ovh/generatedreports/rapi/
+
+
+      - SMTP_PORT=25
+      - SMTP_USER=
+      - SMTP_PASSWORD=
+      - SMTP_ADDRESS=mysmtp
+      - SMTP_FROM=noreply@nyx.com
+      - SMTP_TLS=false
+    volumes:
+      - '/home/nyx/logs/:/opt/sources/logs/'
+      - "/home/nyx/generatedreports/rapi/:/opt/sources/outputs/"
+
+
+###########################
+
+  curator:
+    image: snuids/curator:v0.1.5
+    container_name: curator
+    volumes:
+      - /home/nyx/curator/action_file.yml:/usr/local/bin/action_file.yml
+      - /home/nyx/curator/curator_config.yml:/usr/local/bin/curator_config.yml 
+ 
+###########################
+  redis:
+   image: redis
+   container_name: redis
+
+###########################
+  camelworker1:
+          #    image: snuids/camelworker:v1.14.0
+    image: engiecofely/camelworker:v1.14.12a
+    container_name: camelworker1
+    volumes:
+      - /home/nyx/camelworkers/camelworker1:/camelbin/conf
+      - /home/nyx/logs:/camelbin/logs
+      - /home/nyx/backup:/camelbin/backup
+      - /home/nyx/config_backup:/camelbin/config
+      - /home/nyx/reportrunner/generated:/camelbin/generated
+      - /home/import/mails:/camelbin/data/mails
+    restart: always
+    environment:
+      - SITE_NAME=YOURSERVER
+      - INSTANCE_NAME=NyxDemo
+      - TZ=Europe/Paris
+      - WORKFLOW_NAME=camelworker1
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -Xms256m -Xmx512m
+      - _JAVA_OPTIONS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -Xms256m -Xmx512m
+
+
+
+##############################
+  elastalert:
+    image: snuids/elastalert:v0.1.27e
+    container_name: elastalert
+    command: python elastalert.py --verbose
+    environment:
+      - TZ=Europe/Paris
+      - AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials
+    volumes:
+      - "/home/nyx/logs/:/home/elastalert/logs"
+      - "/home/nyx/elastalert/rules:/home/elastalert/rules"
+      - "/home/nyx/elastalert/config.yaml:/home/elastalert/config.yaml"
+      - "/home/nyx/elastalert/jira_acct.yaml:/home/elastalert/jira_acct.yaml"
+    restart: always
+
+
+##############################
+  monitordocker:
+    image: snuids/monitordocker:v0.4.5
+    container_name: monitordocker
+    environment:
+      - ELASTIC_ADDRESS=esnode1:9200
+      - PYTHONUNBUFFERED=0
+      - POLLING_SPEED=60
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+
+##############################
+  nginx:
+    image: openresty/openresty:xenial 
+    container_name: nginx
+    ports:
+      - "5701:5701"
+      - "5702:5702"
+      - "80:80"
+      - "443:443"
+      - "444:444"
+      - "8080:8080"
+      - "8162:8162"
+      - "6601:6601"
+#      - "8080:8080"
+      - "9000:9000"
+      - "9001:9001"
+      - "9200:9200"
+      - "61619:61619"
+    volumes:
+      - "/home/nyx/public_www/:/www/public_www/"
+      - "/home/nyx/generatedreports:/www/generatedreports"
+      - "/home/nyx/nginx/:/etc/nginx/conf.d/"
+      - "/home/nyx/logs/:/var/log/nginx"
+      - "/home/nyx/certs/:/etc/certs/"
+      - "/home/nyx/reportrunner/generated:/www/reports"
+    links:
+      - kibana
+      - esnodebal
+    restart: always
+
+
+
+##############################
+  kibana:
+    image: snuids/kibanatraffic:v7.0.1
+    container_name: kibana
+    ports:
+      - 5801:5601
+    environment:
+      - ELASTICSEARCH_URL=http://esnodebal:9200
+      - TZ=Europe/Paris
+    volumes:
+      - "/home/nyx/kibana/kibanaclassic.yml:/usr/share/kibana/config/kibana.yml"
+    restart: always
+
+
+##############################
+  kibananyx:
+    image: snuids/kibanatraffic:v7.0.1
+    container_name: kibananyx
+    environment:
+      - ELASTICSEARCH_URL=http://esnodebal:9200
+      - TZ=Europe/Paris
+    volumes:
+      - "/home/nyx/kibana/kibananyx.yml:/usr/share/kibana/config/kibana.yml"
+    restart: always
+
+
+##############################
+  cerebro:
+    image: lmenezes/cerebro:0.8.4
+    container_name: cerebro
+
+##############################
+#  esnode1:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+#    container_name: esnode1
+#    volumes:
+#      - "/home/nyx/ELK/esnode1/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+#      - "/home/nyx/ELK/esnode1/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "/home/elkdata/esnode1/data:/usr/share/elasticsearch/data:rw"
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 50m
+
+##############################
+#  esnode2:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+#    container_name: esnode2
+#    volumes:
+#      - "/home/nyx/ELK/esnode2/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+#      - "/home/nyx/ELK/esnode2/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "/home/elkdata/esnode2/data:/usr/share/elasticsearch/data:rw"
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 50m
+
+##############################
+#  esnode3:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+#    container_name: esnode3
+#    volumes:
+#      - "/home/nyx/ELK/esnode3/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+#      - "/home/nyx/ELK/esnode3/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "/home/elkdata/esnode3/data:/usr/share/elasticsearch/data:rw"
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 50m
+
+##############################
+  esnodebal:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.1
+    container_name: esnodebal
+    volumes:
+      - "/home/nyx/ELK/esnodebal/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+      - "/home/nyx/ELK/esnodebal/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+      - "/home/nyx/ELK/esnodebal/data:/usr/share/elasticsearch/data:rw"
+      - "/home/nyx/sqlopendistro/:/usr/share/elasticsearch/plugins/sql"        
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+
+
+##############################
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.0.1
+    container_name: logstash
+    volumes:
+      - /home/nyx/logstash/config:/usr/share/logstash/config
+      - '/home/nyx/logs/:/var/log/logs/'
+    command: logstash -f /usr/share/logstash/config/logstash.conf
+    environment:
+      - xpack.monitoring.enabled=false
+
+##############################
+  postgres:
+   image: postgres:11.4
+   container_name: postgres
+   ports:
+     - 5444:5432
+   volumes:
+     - /home/nyx/postgresql:/var/lib/postgresql/data
+     - /etc/timezone:/etc/timezone
+   environment:
+     - POSTGRES_PASSWORD=postgrespass
+     - TZ=Europe/Paris
+
+
+

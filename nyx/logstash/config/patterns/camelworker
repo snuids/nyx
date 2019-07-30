@@ -1,0 +1,1 @@
+CAMELWORKER (?<timestamp>%{TIMESTAMP_ISO8601}) %{LOGLEVEL:loglevel} * - (?<logger>[A-Za-z0-9$_. ]+) * - %{GREEDYDATA:message}$

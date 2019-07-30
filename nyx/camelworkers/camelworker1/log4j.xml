@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+        <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
+                 <param name="Threshold" value="INFO" />
+           <layout class="org.apache.log4j.PatternLayout">
+                <param name="ConversionPattern" value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/>
+                </layout>
+        </appender>
+
+  <appender name="infoAppender" class="org.apache.log4j.rolling.RollingFileAppender" >
+   <param name="Threshold" value="INFO" />
+    <rollingPolicy name="file" class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+       <param name="FileNamePattern"
+              value="/camelbin/logs/camelworker1.%d{yyyy-MM-dd}.log"/>
+       <param name="ActiveFileName" value="/camelbin/logs/camelworker1.log"/>
+    </rollingPolicy>
+    <layout class="org.apache.log4j.EnhancedPatternLayout" >
+       <param name="ConversionPattern" value="%d{ISO8601} %-5p - %-26.26c{1} - %m%n" />
+   </layout>
+  </appender>
+
+  <root>
+             <priority value="INFO"></priority>
+             <appender-ref ref="infoAppender"/>
+             <appender-ref ref="consoleAppender"/>
+        </root>
+</log4j:configuration>

@@ -1,0 +1,13 @@
+#kibana classic
+server.name: kibana
+server.host: "0"
+server.basePath: /kibananyx
+
+elasticsearch.url: http://esnodebal:9200
+vega.enableExternalUrls: true
+
+xpack.security.enabled: false
+xpack.graph.enabled: false
+xpack.reporting.enabled: false
+xpack.monitoring.enabled: false
+xpack.ml.enabled: false

@@ -1,3 +1,3 @@
 # nyx
 
-![Radar](https://raw.githubusercontent.com/snuids/nyx/blob/master/medias/Untitled.gif)
+![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/Untitled.gif)

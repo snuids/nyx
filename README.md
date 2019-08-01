@@ -4,4 +4,4 @@
 
 ## Architecture
 
-[Architecture](folder_contents.md)
+[Folder Structure](folder_contents.md)

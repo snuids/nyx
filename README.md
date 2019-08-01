@@ -4,4 +4,4 @@
 
 ## Architecture
 
-[Architecture](architecture.md)
+[Architecture](folder_contents.md)

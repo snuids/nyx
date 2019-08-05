@@ -7,12 +7,13 @@ NYX is based on micro-services (Docker) and can be deployed on-premise or on you
 It allows Business people to focus on how to solve business problems without having to worry about IT.
 
 NYX embed 2 Databases:
-* POSTGRESQL. An SQL relational Database to store your Data that need
-strong consistency.
-* ELASTICSEARCH. A NoSQL distributed RESTful Database that allow you to
-process strong analytics tasks.
+```
+* POSTGRESQL. A SQL relational fatabase to store Data that need strong consistency.
+* ELASTICSEARCH. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.
+```
 
-NYX integrate several Open Source Projects:
+NYX integrate several Open Source Projects such as:
+
 * Apache ActiveMQ a strongx message broker.
 * Apache Camel a Java framework that focuses on making integrations easier
 and more accessible to developers (https://dzone.com/articles/open-source-
@@ -26,6 +27,7 @@ visualization designs.
 Elasticsearch data.
 
 NYX is separated in 3 main parts:
+
 * NYX_UI the web interface. You can add your specific interfaces in there to
 increase the End User Experience. -&gt; link vers GITHUB
 * NYX_REST the REST API where you can add your specific functions to

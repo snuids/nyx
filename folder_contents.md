@@ -38,8 +38,7 @@
 ├── logstash
 │   └── config
 ├── nginx
-│   ├── server.crt
-│   └── server.key
+│   ├── default.conf
 ├── reportrunner
 │   ├── jasper
 │   │   ├── myjasper.jasper
@@ -66,6 +65,34 @@ This folder contains the curator configuration file used to clean the system.
 
 # ./docker-compose
 This folder contains docker-compose.yml file that can be used to create all the containers.
+
+# ./elastalert
+This folder contains the Elast Alert system configuration file and rules
+
+## ./elastalert/rules
+This folder contains the Elast Alert rules.
+
+# ./kibana
+This folder contains two kibana yml files. One is used for the NYX integrated kibana. The other is used for the regular kibana.
+
+# ./logstash
+This folder contains the logstash configuration
+
+# ./nginx
+This folder contains the default.conf used by nginx to reverse proxy the various services of the platform.
+
+# ./reportrunner
+This folder contains the reports of the platform.
+
+# ./sqlopendistro
+This folder contains the Amazon Open Distro SQL jars. This folder is mounted in the esnodebal container.
+
+
+
+
+
+
+
 
 
 

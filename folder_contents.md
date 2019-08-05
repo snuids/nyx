@@ -48,3 +48,17 @@
 └── sqlopendistro
     
 ```
+
+### ELK
+## esnode*: 
+This folder contains the elastic search node configurations.
+
+### CamelWorkers
+## camelworker 1: 
+This folder contains the configguration file for the apache camel ETL system. The configuration is done via a xml file.
+Additional workers can be added via the docker-compose file
+
+
+
+
+

@@ -1,6 +1,6 @@
 [Back](README.md)
 
-## NYX Folder Contents
+# NYX Folder Contents
 ```bash
 ├── ELK
 │   ├── esnode1
@@ -49,14 +49,30 @@
     
 ```
 
-### ELK
-## esnode*: 
+# ./ELK
+## ./ELK/esnode*: 
 This folder contains the elastic search node configurations.
 
-### CamelWorkers
-## camelworker 1: 
+# ./camelworkers
+## ./camelworkers/camelworker1: 
 This folder contains the configguration file for the apache camel ETL system. The configuration is done via a xml file.
 Additional workers can be added via the docker-compose file
+
+# ./certs
+This folder contains the private key and the certificate used by nginx to secure the system.
+
+# ./curator
+This folder contains the curator configuration file used to clean the system.
+
+# ./docker-compose
+This folder contains docker-compose.yml file that can be used to create all the containers.
+
+
+
+
+
+
+
 
 
 

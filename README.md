@@ -8,25 +8,27 @@ It allows Business people to focus on how to solve business problems without hav
 
 NYX embed 2 Databases:
 ```
-* POSTGRESQL. A SQL relational fatabase to store Data that need strong consistency.
-* ELASTICSEARCH. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.
+- POSTGRESQL. A SQL relational fatabase to store Data that need strong consistency.
+- ELASTICSEARCH. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.
 ```
 
 NYX integrate several Open Source Projects such as:
 
-* Apache ActiveMQ a strongx message broker.
-* Apache Camel a Java framework that focuses on making integrations easier
+```
+- Apache ActiveMQ a strongx message broker.
+- Apache Camel a Java framework that focuses on making integrations easier
 and more accessible to developers (https://dzone.com/articles/open-source-
 integration-apache).
-* Node-RED a graphical and programming tool to wire together hardware
+- Node-RED a graphical and programming tool to wire together hardware
 devices, APIs and services.
-* Jupyter Notebook one of the Data scientist essential tool.
-* Vega, a visualization grammar, a declarative language for creative interactive
+- Jupyter Notebook one of the Data scientist essential tool.
+- Vega, a visualization grammar, a declarative language for creative interactive
 visualization designs.
-* Kibana the window into your Elastic Stack that lets you visualize your
+- Kibana the window into your Elastic Stack that lets you visualize your
 Elasticsearch data.
+```
 
-NYX is separated in 3 main parts:
+NYX is split in 3 parts:
 
 * NYX_UI the web interface. You can add your specific interfaces in there to
 increase the End User Experience. -&gt; link vers GITHUB

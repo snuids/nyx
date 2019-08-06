@@ -139,7 +139,7 @@ services:
 
   nyx_reportrunner_1:
           #    image: snuids/nyx_reportrunner:v0.0.5
-    image: snuids/nyx_reportrunner:v1.0.8
+    image: snuids/nyx_reportrunner:v1.1.0
     container_name: nyx_reportrunner_1
     restart: always
     environment:

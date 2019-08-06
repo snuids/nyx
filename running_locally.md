@@ -3,8 +3,9 @@
 # Running Locally
 In order to run the platform locally, you need:
 
-* A linux based machine with at least 4GB of memory. 
-* Docker installed
+* A linux based machine with at least 8GB of memory. 
+* git installed
+* docker installed
 * docker-compose installed
 
 ## Step 1

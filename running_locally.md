@@ -18,4 +18,17 @@ docker-compose up -d
 
 ## Step 2
 
+* cd your command line to the folder esnodebal
+* type chmod ugo+rw -R *
+* docker restart esnodebal
+* check that esnodebal is running if not
+** Type docker logs -f esnodebal
+** if the error is 
+*** use the following command to edit the file limits
+```sudo vi /etc/security/limits.conf```
+
+
+
+## Step 3
+
 * Once all the containers up, use a browser to open the following URL:

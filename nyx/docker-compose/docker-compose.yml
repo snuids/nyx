@@ -9,13 +9,12 @@ services:
     environment:
       - TZ=Europe/Paris        
     volumes:
-      - /home/nyx/reportrunnerold:/opt/notebooks/reportsold
-      - /home/nyx/reportrunner:/opt/notebooks/reports
-      - /home/nyx/camelworkers:/opt/notebooks/camelworkers
-      - /home/nyx/logs:/opt/notebooks/logs
-      - /home/nyx/elastalert/rules:/opt/notebooks/elastalert
-      - /home/import/mails:/opt/notebooks/mails
-      - /home/nyx/notebooks:/opt/notebooks/notebooks
+      - ../reportrunnerold:/opt/notebooks/reportsold
+      - ../reportrunner:/opt/notebooks/reports
+      - ../camelworkers:/opt/notebooks/camelworkers
+      - ../logs:/opt/notebooks/logs
+      - ../elastalert/rules:/opt/notebooks/elastalert
+      - ../notebooks:/opt/notebooks/notebooks
 
 
 ##############################
@@ -57,7 +56,7 @@ services:
       - 'LOGIO_HARVESTER5FILEPATTERN=ReportRunner_1.log'
 
     volumes:
-      - '/home/nyx/logs/:/var/log/logs/'
+      - '../logs/:/var/log/logs/'
     links:
       - logioweb:logio
     user: root
@@ -112,8 +111,8 @@ services:
       - PG_DATABASE=nyx      
 
     volumes:
-      - '/home/nyx/logs/:/opt/sources/logs/'
-      - "/home/nyx/generatedreports/rapi/:/opt/sources/outputs/"
+      - '../logs/:/opt/sources/logs/'
+      - "../generatedreports/rapi/:/opt/sources/outputs/"
 
 ################################################################################################
 
@@ -134,7 +133,7 @@ services:
       - ELK_PORT=9200
       - ELK_SSL=false
     volumes:
-      - '/home/nyx/logs/:/opt/sources/logs/'
+      - '../logs/:/opt/sources/logs/'
 
 ################################################################################################
 
@@ -161,9 +160,9 @@ services:
       - RUNNER=1
       - REPORT_URL=https://YOURSERVER/generatedreports
     volumes:
-      - '/home/nyx/logs/:/opt/sources/logs/'
-      - '/home/nyx/generatedreports/:/opt/sources/generated/'
-      - '/home/nyx/reportrunner/:/opt/sources/reports'
+      - '../logs/:/opt/sources/logs/'
+      - '../generatedreports/:/opt/sources/generated/'
+      - '../reportrunner/:/opt/sources/reports'
 
 ################################################################################################
 
@@ -185,9 +184,9 @@ services:
       - ELK_SSL=false
       - TZ=Europe/Paris
     volumes:
-      - '/home/nyx/logs/:/opt/sources/logs/'
-      - '/home/nyx/generatedreports/:/opt/sources/generated/'
-      - '/home/nyx/reportrunner/:/opt/sources/reports'
+      - '../logs/:/opt/sources/logs/'
+      - '../generatedreports/:/opt/sources/generated/'
+      - '../reportrunner/:/opt/sources/reports'
 
 
 ################################################################################################
@@ -237,8 +236,8 @@ services:
       - SMTP_FROM=noreply@nyx.com
       - SMTP_TLS=false
     volumes:
-      - '/home/nyx/logs/:/opt/sources/logs/'
-      - "/home/nyx/generatedreports/rapi/:/opt/sources/outputs/"
+      - '../logs/:/opt/sources/logs/'
+      - "../generatedreports/rapi/:/opt/sources/outputs/"
 
 
 ###########################
@@ -247,8 +246,8 @@ services:
     image: snuids/curator:v0.1.5
     container_name: curator
     volumes:
-      - /home/nyx/curator/action_file.yml:/usr/local/bin/action_file.yml
-      - /home/nyx/curator/curator_config.yml:/usr/local/bin/curator_config.yml 
+      - ../curator/action_file.yml:/usr/local/bin/action_file.yml
+      - ../curator/curator_config.yml:/usr/local/bin/curator_config.yml 
  
 ###########################
   redis:
@@ -261,12 +260,11 @@ services:
     image: engiecofely/camelworker:v1.14.12a
     container_name: camelworker1
     volumes:
-      - /home/nyx/camelworkers/camelworker1:/camelbin/conf
-      - /home/nyx/logs:/camelbin/logs
-      - /home/nyx/backup:/camelbin/backup
-      - /home/nyx/config_backup:/camelbin/config
-      - /home/nyx/reportrunner/generated:/camelbin/generated
-      - /home/import/mails:/camelbin/data/mails
+      - ../camelworkers/camelworker1:/camelbin/conf
+      - ../logs:/camelbin/logs
+      - ../backup:/camelbin/backup
+      - ../config_backup:/camelbin/config
+      - ../reportrunner/generated:/camelbin/generated
     restart: always
     environment:
       - SITE_NAME=YOURSERVER
@@ -287,10 +285,10 @@ services:
       - TZ=Europe/Paris
       - AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials
     volumes:
-      - "/home/nyx/logs/:/home/elastalert/logs"
-      - "/home/nyx/elastalert/rules:/home/elastalert/rules"
-      - "/home/nyx/elastalert/config.yaml:/home/elastalert/config.yaml"
-      - "/home/nyx/elastalert/jira_acct.yaml:/home/elastalert/jira_acct.yaml"
+      - "../logs/:/home/elastalert/logs"
+      - "../elastalert/rules:/home/elastalert/rules"
+      - "../elastalert/config.yaml:/home/elastalert/config.yaml"
+      - "../elastalert/jira_acct.yaml:/home/elastalert/jira_acct.yaml"
     restart: always
 
 
@@ -325,12 +323,12 @@ services:
       - "9200:9200"
       - "61619:61619"
     volumes:
-      - "/home/nyx/public_www/:/www/public_www/"
-      - "/home/nyx/generatedreports:/www/generatedreports"
-      - "/home/nyx/nginx/:/etc/nginx/conf.d/"
-      - "/home/nyx/logs/:/var/log/nginx"
-      - "/home/nyx/certs/:/etc/certs/"
-      - "/home/nyx/reportrunner/generated:/www/reports"
+      - "../public_www/:/www/public_www/"
+      - "../generatedreports:/www/generatedreports"
+      - "../nginx/:/etc/nginx/conf.d/"
+      - "../logs/:/var/log/nginx"
+      - "../certs/:/etc/certs/"
+      - "../reportrunner/generated:/www/reports"
     links:
       - kibana
       - esnodebal
@@ -348,7 +346,7 @@ services:
       - ELASTICSEARCH_URL=http://esnodebal:9200
       - TZ=Europe/Paris
     volumes:
-      - "/home/nyx/kibana/kibanaclassic.yml:/usr/share/kibana/config/kibana.yml"
+      - "../kibana/kibanaclassic.yml:/usr/share/kibana/config/kibana.yml"
     restart: always
 
 
@@ -360,7 +358,7 @@ services:
       - ELASTICSEARCH_URL=http://esnodebal:9200
       - TZ=Europe/Paris
     volumes:
-      - "/home/nyx/kibana/kibananyx.yml:/usr/share/kibana/config/kibana.yml"
+      - "../kibana/kibananyx.yml:/usr/share/kibana/config/kibana.yml"
     restart: always
 
 
@@ -374,8 +372,8 @@ services:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
 #    container_name: esnode1
 #    volumes:
-#      - "/home/nyx/ELK/esnode1/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
-#      - "/home/nyx/ELK/esnode1/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "../ELK/esnode1/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+#      - "../ELK/esnode1/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
 #      - "/home/elkdata/esnode1/data:/usr/share/elasticsearch/data:rw"
 #    logging:
 #      driver: json-file
@@ -387,8 +385,8 @@ services:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
 #    container_name: esnode2
 #    volumes:
-#      - "/home/nyx/ELK/esnode2/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
-#      - "/home/nyx/ELK/esnode2/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "../ELK/esnode2/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+#      - "../ELK/esnode2/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
 #      - "/home/elkdata/esnode2/data:/usr/share/elasticsearch/data:rw"
 #    logging:
 #      driver: json-file
@@ -400,8 +398,8 @@ services:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
 #    container_name: esnode3
 #    volumes:
-#      - "/home/nyx/ELK/esnode3/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
-#      - "/home/nyx/ELK/esnode3/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+#      - "../ELK/esnode3/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+#      - "../ELK/esnode3/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
 #      - "/home/elkdata/esnode3/data:/usr/share/elasticsearch/data:rw"
 #    logging:
 #      driver: json-file
@@ -413,10 +411,10 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.0.1
     container_name: esnodebal
     volumes:
-      - "/home/nyx/ELK/esnodebal/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
-      - "/home/nyx/ELK/esnodebal/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
-      - "/home/nyx/ELK/esnodebal/data:/usr/share/elasticsearch/data:rw"
-      - "/home/nyx/sqlopendistro/:/usr/share/elasticsearch/plugins/sql"        
+      - "../ELK/esnodebal/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
+      - "../ELK/esnodebal/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+      - "../ELK/esnodebal/data:/usr/share/elasticsearch/data:rw"
+#      - "../sqlopendistro/:/usr/share/elasticsearch/plugins/sql"        
     logging:
       driver: json-file
       options:
@@ -428,8 +426,8 @@ services:
     image: docker.elastic.co/logstash/logstash:7.0.1
     container_name: logstash
     volumes:
-      - /home/nyx/logstash/config:/usr/share/logstash/config
-      - '/home/nyx/logs/:/var/log/logs/'
+      - ../logstash/config:/usr/share/logstash/config
+      - '../logs/:/var/log/logs/'
     command: logstash -f /usr/share/logstash/config/logstash.conf
     environment:
       - xpack.monitoring.enabled=false
@@ -441,8 +439,8 @@ services:
    ports:
      - 5444:5432
    volumes:
-     - /home/nyx/postgresql:/var/lib/postgresql/data
-     - /etc/timezone:/etc/timezone
+     - ../postgresql:/var/lib/postgresql/data
+#     - /etc/timezone:/etc/timezone
    environment:
      - POSTGRES_PASSWORD=postgrespass
      - TZ=Europe/Paris

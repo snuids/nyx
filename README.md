@@ -27,7 +27,7 @@ Elasticsearch data.
 
 **NYX is split in 3 parts:**
 
-* ![NYX_UI](https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
+* NYX_UI (https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
 increase the End User Experience. -&gt; link vers GITHUB
 * NYX_REST the REST API where you can add your specific functions to
 interact with the both Databases. -&gt; link vers GITHUB

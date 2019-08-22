@@ -3,7 +3,7 @@ server.name: kibana
 server.host: "0"
 server.basePath: /kibananyx
 
-elasticsearch.url: http://esnodebal:9200
+elasticsearch.hosts: http://esnodebal:9200
 vega.enableExternalUrls: true
 
 xpack.security.enabled: false

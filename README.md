@@ -15,8 +15,7 @@ It allows Business people to focus on how to solve business problems without hav
 
 * Apache ActiveMQ a strongx message broker.
 * Apache Camel a Java framework that focuses on making integrations easier
-and more accessible to developers (https://dzone.com/articles/open-source-
-integration-apache).
+and more accessible to developers (https://dzone.com/articles/open-source-integration-apache).
 * Node-RED a graphical and programming tool to wire together hardware
 devices, APIs and services.
 * Jupyter Notebook one of the Data scientist essential tool.
@@ -27,7 +26,7 @@ Elasticsearch data.
 
 **NYX is split in 3 parts:**
 
-* NYX_UI the web interface. You can add your specific interfaces in there to
+* NYX_UI (https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
 increase the End User Experience. -&gt; link vers GITHUB
 * NYX_REST the REST API where you can add your specific functions to
 interact with the both Databases. -&gt; link vers GITHUB

@@ -15,8 +15,7 @@ It allows Business people to focus on how to solve business problems without hav
 
 * Apache ActiveMQ a strongx message broker.
 * Apache Camel a Java framework that focuses on making integrations easier
-and more accessible to developers (https://dzone.com/articles/open-source-
-integration-apache).
+and more accessible to developers (https://dzone.com/articles/open-source-integration-apache).
 * Node-RED a graphical and programming tool to wire together hardware
 devices, APIs and services.
 * Jupyter Notebook one of the Data scientist essential tool.

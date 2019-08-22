@@ -101,8 +101,8 @@ services:
       - OUTPUT_FOLDER=./outputs/
       - OUTPUT_URL=https://YOURSERVER/generatedreports/rapi/
       - TZ=Europe/Paris
-      - WELCOMEMESSAGE=NYX Platform
-      - ICON=paper-plane
+      - WELCOMEMESSAGE=LOCAL NYX Platform
+      - ICON=bong
 
       - PG_LOGIN=nyx
       - PG_PASSWORD=postgrespass
@@ -139,7 +139,7 @@ services:
 
   nyx_reportrunner_1:
           #    image: snuids/nyx_reportrunner:v0.0.5
-    image: snuids/nyx_reportrunner:v1.0.8
+    image: snuids/nyx_reportrunner:v1.1.0
     container_name: nyx_reportrunner_1
     restart: always
     environment:
@@ -297,7 +297,7 @@ services:
     image: snuids/monitordocker:v0.4.5
     container_name: monitordocker
     environment:
-      - ELASTIC_ADDRESS=esnode1:9200
+      - ELASTIC_ADDRESS=esnodebal:9200
       - PYTHONUNBUFFERED=0
       - POLLING_SPEED=60
     volumes:
@@ -414,11 +414,15 @@ services:
       - "../ELK/esnodebal/conf/jvm.options:/usr/share/elasticsearch/config/jvm.options"
       - "../ELK/esnodebal/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
       - "../ELK/esnodebal/data:/usr/share/elasticsearch/data:rw"
-#      - "../sqlopendistro/:/usr/share/elasticsearch/plugins/sql"        
+      - "../sqlopendistro/:/usr/share/elasticsearch/plugins/sql"        
     logging:
       driver: json-file
       options:
         max-size: 50m
+    ulimits:
+      nofile:
+         soft: 65536
+         hard: 65536
 
 
 ##############################

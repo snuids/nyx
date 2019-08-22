@@ -13,7 +13,7 @@ It allows Business people to focus on how to solve business problems without hav
 
 **NYX integrate several Open Source Projects such as:**
 
-* Apache ActiveMQ a strongx message broker.
+* Apache ActiveMQ a state of the art message broker with online monitoring tools (https://github.com/snuids/AMQC).
 * Apache Camel a Java framework that focuses on making integrations easier
 and more accessible to developers (https://dzone.com/articles/open-source-integration-apache).
 * Node-RED a graphical and programming tool to wire together hardware

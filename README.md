@@ -35,7 +35,7 @@ process your Data.
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/Untitled.gif)
 
-** Additional Repositories:
+** Additional Repositories:**
 
 * NYX_WS_SERVER (https://github.com/snuids/nyx_ws_server) dispatches stomp ActiveMQ messages to web sockets
 

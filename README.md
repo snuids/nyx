@@ -28,12 +28,16 @@ Elasticsearch data.
 
 * NYX_UI (https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
 increase the End User Experience. -&gt; link vers GITHUB
-* NYX_REST the REST API where you can add your specific functions to
+* NYX_REST (https://github.com/snuids/nyx_rest)  the REST API where you can add your specific functions to
 interact with the both Databases. -&gt; link vers GITHUB
 * NYX_MODULES where you can ship your containers to insert, clean and
 process your Data.
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/Untitled.gif)
+
+** Additional Repositories:
+
+* NYX_WS_SERVER (https://github.com/snuids/nyx_ws_server) dispatches stomp ActiveMQ messages to web sockets
 
 # Getting Started
 

@@ -30,7 +30,7 @@ Elasticsearch data.
 increase the End User Experience. -&gt; link vers GITHUB
 * NYX_REST (https://github.com/snuids/nyx_rest)  the REST API where you can add your specific functions to
 interact with the both Databases. -&gt; link vers GITHUB
-* NYX_MODULES where you can ship your containers to insert, clean and
+* NYX_CONTAINERS (https://github.com/snuids/nyx_containers) where you can ship your containers to insert, clean and
 process your Data.
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/Untitled.gif)

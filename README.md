@@ -1,5 +1,8 @@
 # NYX
 
+<img src="https://img.shields.io/badge/made%20with-python-blue.svg?style=flat-square" alt="made with python">
+
+
 NYX is an open source platform that can be used to digitize your Business. 
 It is modular, highly customizable, scalable, in order to answer your business needs. 
 

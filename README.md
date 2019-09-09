@@ -5,7 +5,7 @@
 ![badge](https://img.shields.io/github/last-commit/snuids/nyx)
 
 NYX is a platform that can be used to digitize your organization. 
-It is modular, highly customizable, scalable and allows people to focus on how to solve business problems. 
+It is modular, highly customizable, scalable and allows to focus on functionnality rather than infrastructure. 
 
 NYX is based on micro-services (Docker) and can be deployed on-premise or on your favorite cloud provider.
 

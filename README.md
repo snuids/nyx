@@ -4,8 +4,8 @@
 ![badge](https://img.shields.io/badge/made%20with-python-blue.svg?style=flat-square)
 ![badge](https://img.shields.io/github/last-commit/snuids/nyx)
 
-NYX is an open source platform that can be used to digitize your Business. 
-It is modular, highly customizable, scalable, in order to answer your business needs. It allows Business people to focus on how to solve business problems without having to worry about IT. 
+NYX is a platform that can be used to digitize your Business. 
+It is modular, highly customizable, scalable and allows people to focus on how to solve business problems. 
 
 NYX is based on micro-services (Docker) and can be deployed on-premise or on your favorite cloud provider.
 

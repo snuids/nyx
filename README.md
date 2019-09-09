@@ -12,8 +12,8 @@ It allows Business people to focus on how to solve business problems without hav
 
 **NYX embed 2 Databases:**
 
-- POSTGRESQL. A SQL relational database to store Data that need strong consistency.
-- ELASTICSEARCH. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.
+- PostgreSQL. A SQL relational database to store Data that need strong consistency.
+- Elasticsearch. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.
 
 **NYX integrate several Open Source Projects such as:**
 

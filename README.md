@@ -17,7 +17,7 @@ NYX is based on micro-services (Docker) and can be deployed on-premise or on you
 
 **NYX integrate several Open Source Projects such as:**
 
-* Apache ActiveMQ a state of the art message broker with online monitoring tools (https://github.com/snuids/AMQC).
+* Apache ActiveMQ a state of the art message broker with [online monitoring tools](https://github.com/snuids/AMQC).
 * Apache Camel a Java framework that focuses on making integrations easier
 and more accessible to developers (https://dzone.com/articles/open-source-integration-apache).
 * Node-RED a graphical and programming tool to wire together hardware
@@ -28,20 +28,21 @@ visualization designs.
 * Kibana the window into your Elastic Stack that lets you visualize your
 Elasticsearch data.
 
+
 **NYX is split in 3 parts:**
 
-* NYX_UI (https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
+* [NYX_UI](https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
 increase the End User Experience.
-* NYX_REST (https://github.com/snuids/nyx_rest)  the REST API where you can add your specific functions to
+* [NYX_REST](https://github.com/snuids/nyx_rest)  the REST API where you can add your specific functions to
 interact with the both Databases.
-* NYX_CONTAINERS (https://github.com/snuids/nyx_containers) where you can ship your containers to insert, clean and
+* [NYX_CONTAINERS](https://github.com/snuids/nyx_containers) where you can ship your containers to insert, clean and
 process your Data.
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/Untitled.gif)
 
 ** Additional Repositories:**
 
-* NYX_WS_SERVER (https://github.com/snuids/nyx_ws_server) dispatches stomp ActiveMQ messages to web sockets
+* [NYX_WS_SERVER](https://github.com/snuids/nyx_ws_server) dispatches stomp ActiveMQ messages to web sockets
 
 # Getting Started
 

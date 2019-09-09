@@ -9,13 +9,25 @@ It is modular, highly customizable, scalable and allows to focus on functionnali
 
 NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and can be deployed on-premise or on your favorite cloud provider.
 
+- [2 embeded Databases](#2-databases-embeded)
+- [Based on Open source projects](#based-on-open-source-projects)
+- [NYX is split in 3 parts](#based-on-open-source-projects)
+  - [NYX_UI](https://github.com/snuids/nyx_ui)
+  - [NYX_REST](https://github.com/snuids/nyx_rest)
+  - [NYX_CONTAINERS](https://github.com/snuids/nyx_containers)
+- [Additional repositories](#additional-reporsitories)
+  - [NYX_WS_SERVER](https://github.com/snuids/nyx_ws_server)
+- [Getting Started](#getting-started)
+  - [Using the AWS AMI](#using-the-aws-ami)
+  - [Running the platform locally](running-the-platform-locally)
+- [Architecture](#architecture)
 
-## NYX embed 2 Databases:
+## 2 Databases embeded:
 
 - PostgreSQL. A SQL relational database to store Data that need strong consistency.
 - Elasticsearch. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.
 
-## NYX integrate several Open Source Projects such as:
+## Based on Open source projects:
 
 * Apache ActiveMQ a state of the art message broker with [online monitoring tools](https://github.com/snuids/AMQC).
 * Apache Camel a Java framework that focuses on making integrations easier

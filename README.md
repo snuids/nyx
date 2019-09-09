@@ -19,8 +19,8 @@ NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and c
   - [NYX_WS_SERVER](https://github.com/snuids/nyx_ws_server)
 - [Getting Started](#getting-started)
   - [Using the AWS AMI](#using-the-aws-ami)
-  - [Running the platform locally](running-the-platform-locally)
-- [Architecture](#architecture)
+  - [Running the platform locally](running_locally.md)
+- [Architecture](folder_contents.md)
 
 ## 2 Databases embeded:
 

@@ -10,12 +10,12 @@ It is modular, highly customizable, scalable and allows to focus on functionnali
 NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and can be deployed on-premise or on your favorite cloud provider.
 
 
-**NYX embed 2 Databases:**
+## NYX embed 2 Databases:
 
 - PostgreSQL. A SQL relational database to store Data that need strong consistency.
 - Elasticsearch. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.
 
-**NYX integrate several Open Source Projects such as:**
+## NYX integrate several Open Source Projects such as:
 
 * Apache ActiveMQ a state of the art message broker with [online monitoring tools](https://github.com/snuids/AMQC).
 * Apache Camel a Java framework that focuses on making integrations easier
@@ -29,7 +29,7 @@ visualization designs.
 Elasticsearch data.
 
 
-**NYX is split in 3 parts:**
+## NYX is split in 3 parts:
 
 * [NYX_UI](https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
 increase the End User Experience.
@@ -40,7 +40,7 @@ process your Data.
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/Untitled.gif)
 
-**Additional Repositories:**
+## Additional Repositories:
 
 * [NYX_WS_SERVER](https://github.com/snuids/nyx_ws_server) dispatches stomp ActiveMQ messages to web sockets
 

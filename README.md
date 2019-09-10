@@ -11,7 +11,9 @@ NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and c
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/overview.gif)
 
-- [2 embeded Databases](#2-databases-embeded)
+## Summary
+
+- [2 embedded Databases](#2-embedded-databases)
 - [Based on Open source projects](#based-on-open-source-projects)
 - [NYX is split in 3 parts](#based-on-open-source-projects)
   - [NYX_UI](https://github.com/snuids/nyx_ui)
@@ -24,7 +26,7 @@ NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and c
   - [Running the platform locally](running_locally.md)
 - [Architecture](folder_contents.md)
 
-## 2 Databases embeded:
+## 2 embedded databases:
 
 - PostgreSQL. A SQL relational database to store Data that need strong consistency.
 - Elasticsearch. A NoSQL distributed RESTful Database that allow you to process heavy analytics tasks.

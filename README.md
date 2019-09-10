@@ -9,6 +9,8 @@ It is modular, highly customizable, scalable and allows to focus on functionnali
 
 NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and can be deployed on-premise or on your favorite cloud provider.
 
+![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/overview.gif)
+
 - [2 embeded Databases](#2-databases-embeded)
 - [Based on Open source projects](#based-on-open-source-projects)
 - [NYX is split in 3 parts](#based-on-open-source-projects)
@@ -50,7 +52,6 @@ interact with the both Databases.
 * [NYX_CONTAINERS](https://github.com/snuids/nyx_containers) where you can ship your containers to insert, clean and
 process your Data.
 
-![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/Untitled.gif)
 
 ## Additional Repositories:
 

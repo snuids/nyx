@@ -44,6 +44,8 @@ visualization designs.
 * Kibana the window into your Elastic Stack that lets you visualize your
 Elasticsearch data.
 
+![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/overview-apps.gif)
+
 
 ## NYX is split in 3 parts:
 

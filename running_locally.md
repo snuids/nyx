@@ -21,7 +21,9 @@ docker-compose up -d
 
 * cd your command line to the folder esnodebal
 * type chmod ugo+rw -R *
-* docker restart esnodebal
+```shell
+docker restart esnodebal
+```
 * check that esnodebal is running if not
 ** Type docker logs -f esnodebal
 ** if the error is 

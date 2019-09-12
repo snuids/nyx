@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd" xmlns:ns2="null" xmlns:ns3="null"><!-- the camel context -->
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd" 
+    xmlns:ns2="null" 
+    xmlns:ns3="null">    <!-- the camel context -->
 
-    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+    <camelContext id="camel" 
+        xmlns="http://camel.apache.org/schema/spring">
         <jmxAgent id="agent" createConnector="true" registryPort="1499"/>
 
         <dataFormats>
             <xmljson id="xmljson"/>
         </dataFormats>
 
-        
+
 
         <!--Generate Module Info -->
         <route>
@@ -19,12 +23,12 @@
             <!--to uri="log:COUCOU?level=Error"/-->
             <to uri="jms:topic:NYX_MODULE_INFO"/>
         </route>
-        
-      
-        
+
+
+
         <!--Generate Machine Stats -->
         <route>
-            <from uri="timer://lifesign?period=60000"/>			
+            <from uri="timer://lifesign?period=60000"/>
             <setHeader headerName="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
@@ -43,13 +47,10 @@
 
                     for (var i=0;i &lt; doc.length;i++)
                     {   
-                        var action={}
-                        action.index={}
+                        var action={} action.index={}
                         action.index._index = "nyx_infra_load-" + helper.printDate(curtime,'yyyy.MM')
-                        action.index._type  = "doc"
-                        result+=JSON.stringify(action)+"\r\n"
-                        doc[i]['@timestamp'] = curtime.getMillis()
-                        result+=JSON.stringify(doc[i])+"\r\n"
+                        action.index._type  = "doc" result+=JSON.stringify(action)+"\r\n"
+                        doc[i]['@timestamp'] = curtime.getMillis() result+=JSON.stringify(doc[i])+"\r\n"
 
                     }
                     result
@@ -59,11 +60,11 @@
                 <constant>nyx_infra_load</constant>
             </setHeader>
             <to uri="direct:insertinelk"/>
-        </route>        
-        
+        </route>
+
         <!--Generate Disk Stats -->
         <route>
-            <from uri="timer://lifesign?period=600000"/>			
+            <from uri="timer://lifesign?period=600000"/>
             <setHeader headerName="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
@@ -82,13 +83,10 @@
 
                     for (var i=0;i &lt; doc.length;i++)
                     {   
-                        var action={}
-                        action.index={}
+                        var action={} action.index={}
                         action.index._index = "nyx_infra_disk-" + helper.printDate(curtime,'yyyy.MM')
-                        action.index._type  = "doc"
-                        result+=JSON.stringify(action)+"\r\n"
-                        doc[i]['@timestamp'] = curtime.getMillis()
-                        result+=JSON.stringify(doc[i])+"\r\n"
+                        action.index._type  = "doc" result+=JSON.stringify(action)+"\r\n"
+                        doc[i]['@timestamp'] = curtime.getMillis() result+=JSON.stringify(doc[i])+"\r\n"
 
                     }
                     result
@@ -99,13 +97,13 @@
             </setHeader>
             <to uri="direct:insertinelk"/>
         </route>
-        
+
         <!-- Convert ActiveMQ lifesign to Nyx life sign -->
         <route>
             <from uri="jms:topic:RPN_AMQ_MONITORING"/>
             <convertBodyTo type="java.lang.String"/>
             <setBody>
-              <javaScript>
+                <javaScript>
                 var amqmes=JSON.parse(request.body)
                 var rpninfo={"error": "OK", "type": "lifesign", "module": "ActiveMQ"
                     , "version": amqmes["value"]["BrokerVersion"]
@@ -114,11 +112,9 @@
                   , "memorypercentusage":amqmes["value"]["StorePercentUsage"]
                   ,"storepercentusage":amqmes["value"]["MemoryPercentUsage"]
                   ,"currentconnectionscount":amqmes["value"]["CurrentConnectionsCount"]
-                  }
-
-                  res=JSON.stringify(rpninfo)
+                  } res=JSON.stringify(rpninfo)
                   res
-              </javaScript>
+                </javaScript>
             </setBody>
             <to uri="jms:topic:NYX_MODULE_INFO"/>
         </route>
@@ -131,7 +127,7 @@
             </setHeader>
             <to uri="direct:GENERIC_INSERT"/>
         </route>
-        
+
         <!-- Store life signs into Elastic -->
         <route>
             <from uri="jms:topic:NYX_MODULE_INFO"/>
@@ -140,7 +136,7 @@
             </setHeader>
             <to uri="direct:GENERIC_INSERT"/>
         </route>
-        
+
         <route id="TreatmentModuleInfo">
             <from uri="direct:GENERIC_INSERT"/>
             <to uri="bean:jsHelper"/>
@@ -148,7 +144,7 @@
 
             <setBody>
                 <javaScript>
-                <![CDATA[
+                    <![CDATA[
                     var obj = JSON.parse(''+request.body);
                     var helper = request.headers.get('jsHelper');
                     var curtime = new org.joda.time.DateTime();	
@@ -174,7 +170,7 @@
 
                 <setBody>
                     <javaScript>
-                    <![CDATA[
+                        <![CDATA[
                         var tab = JSON.parse(''+request.body);
                         var helper = request.headers.get('jsHelper');
                         var curtime = new org.joda.time.DateTime();	
@@ -197,7 +193,7 @@
                     </javaScript>
                 </setBody>
                 <!--multicast-->
-                    <to uri="direct:insertinelk"/>
+                <to uri="direct:insertinelk"/>
                 <!--/multicast-->
             </aggregate>
         </route>
@@ -211,7 +207,7 @@
                 </setHeader>
                 <to uri="http4://esnodebal:9200/_bulk"/>
 
-                <log loggingLevel="INFO" message="Insert done in ELK : (http4://esnodebal:9200/_bulk) indice:(${in.headers.indice}) number:(${in.headers.CamelAggregatedSize})"  />
+                <log loggingLevel="INFO" message="Insert done in ELK : (http4://esnodebal:9200/_bulk) indice:(${in.headers.indice}) number:(${in.headers.CamelAggregatedSize})" />
                 <!--convertBodyTo type="java.lang.String"/-->
                 <to uri="bean:jsHelper"/>
                 <convertBodyTo type="java.lang.String"/>
@@ -226,39 +222,39 @@
                 </setBody>
                 <filter>
                     <simple>${header.ERRORS}</simple>
-                    <log loggingLevel="ERROR" message="Insertion in ELK generated errors ${body}"/>	
+                    <log loggingLevel="ERROR" message="Insertion in ELK generated errors ${body}"/>
                 </filter>
 
                 <doCatch>
-                    <exception>java.lang.Exception</exception>           
+                    <exception>java.lang.Exception</exception>
                     <log loggingLevel="ERROR" message="Unable to insert in ELK : (http4://esnodebal:9200/_bulk) indice:(nyx_module_info) number:(${in.headers.CamelAggregatedSize}) Exception:${exception.message} Trace:${exception.stacktrace}" />
                     <log loggingLevel="ERROR" message="bulk:${body}" />
                 </doCatch>
             </doTry>
         </route>
 
-       
-     
+
+
 
     </camelContext>
     <bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
         <property name="connectionFactory">
             <bean class="org.apache.activemq.ActiveMQConnectionFactory">
                 <property name="brokerURL" value="tcp://amqc:61616"/>
-				<property name="userName" value="admin"/>
-				<property name="password" value="nyxamqpassword"/>
+                <property name="userName" value="admin"/>
+                <property name="password" value="nyxamqpassword"/>
             </bean>
         </property>
     </bean>
 
-    
-    
-    
-	<bean id="jsHelper" class="helper.JSHelper">
-		<!--<property name="PubSub" ref="pubsub"/>-->
-	</bean>
 
 
-	<bean id="arrayListAggregationStrategy" class="helper.ArrayListAggregationStrategy"/>
+
+    <bean id="jsHelper" class="helper.JSHelper">
+        <!--<property name="PubSub" ref="pubsub"/>-->
+    </bean>
+
+
+    <bean id="arrayListAggregationStrategy" class="helper.ArrayListAggregationStrategy"/>
 </beans>
 

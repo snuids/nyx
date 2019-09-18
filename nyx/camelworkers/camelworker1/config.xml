@@ -46,7 +46,7 @@
                         var action={}
                         action.index={}
                         action.index._index = "nyx_infra_load-" + helper.printDate(curtime,'yyyy.MM')
-                        action.index._type  = "doc"
+                        action.index._type  = "_doc"
                         result+=JSON.stringify(action)+"\r\n"
                         doc[i]['@timestamp'] = curtime.getMillis()
                         result+=JSON.stringify(doc[i])+"\r\n"
@@ -85,7 +85,7 @@
                         var action={}
                         action.index={}
                         action.index._index = "nyx_infra_disk-" + helper.printDate(curtime,'yyyy.MM')
-                        action.index._type  = "doc"
+                        action.index._type  = "_doc"
                         result+=JSON.stringify(action)+"\r\n"
                         doc[i]['@timestamp'] = curtime.getMillis()
                         result+=JSON.stringify(doc[i])+"\r\n"
@@ -188,7 +188,7 @@
                                 res = res+'\n'
                             obj.index = {}
                             obj.index._index = request.headers.get('indice')+"-" + helper.printDate(curtime,'yyyy.MM.dd')
-                            obj.index._type  = "doc"
+                            obj.index._type  = "_doc"
                             res = res + JSON.stringify(obj) + '\n' + JSON.stringify(tab[i])
                         }
                         res = res+'\n'
@@ -237,7 +237,17 @@
             </doTry>
         </route>
 
-       
+       <route>
+           <from uri="timer://foo?period=10000"/>
+           <setBody>
+               <simple>
+                   select count(*) from nyx.public.weather
+               </simple> 
+           </setBody>
+           <to uri="jdbc:pgds"/>
+           <to uri="log:POSTGRES"/>
+          
+        </route>
      
 
     </camelContext>
@@ -251,6 +261,31 @@
         </property>
     </bean>
 
+    <bean id="pgds" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://postgres:5432/nyx" />
+        <property name="username" value="nyx" />
+        <property name="password" value="postgrespass" />
+        <property name="timeBetweenEvictionRunsMillis" value="300000" />
+        <property name="numTestsPerEvictionRun" value="6" />
+        <property name="minEvictableIdleTimeMillis" value="1800000" />
+        <property name="initialSize" value="3" />
+        <property name="maxActive" value="10" />
+        <property name="maxIdle" value="10" />
+        <property name="maxWait" value="5000" />
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxOpenPreparedStatements" value="100" />
+    </bean>    
+    
+    <bean id="pgds2" class="org.postgresql.ds.PGPoolingDataSource" destroy-method="close">
+        <property name="serverName" value="postgres"/>
+        <property name="user" value="nyx"/>
+        <property name="password" value="postgrespass"/>
+        <property name="dataSourceName" value="nyx"/>
+        <property name="initialConnections" value="2"/>
+        <property name="maxConnections" value="4" />
+    </bean>
     
     
     

@@ -1,6 +1,10 @@
 version: '2'
-services:
 
+volumes:
+   node_red_data:
+#   pgdata:
+
+services:
 
 #############################
   anaconda:
@@ -19,10 +23,19 @@ services:
 
 ##############################
   nodered:
-    image: snuids/nodered:v0.20.3-v10
+    image: snuids/nodered:v0.20.8-v10
     container_name: nodered
+    volumes:
+      - ../node_red_data:/data
+#      - node_red_data:/data
+#    environment:
+#      - NODE_TLS_REJECT_UNAUTHORIZED=0
     environment:
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - TZ=Europe/Paris
+      - PGHOST=postgres
+      - PGDATABASE=nyx
+      - PGPASSWORD=postgrespass
+      - PGUSER=nyx
 
 ############################################################################################
   logioweb:
@@ -65,7 +78,7 @@ services:
 ################################################################################################
 
   nyx_ui:
-    image: snuids/nyx_ui:v2.1.0
+    image: lapin/nyx_ui:v2.3.3
     container_name: nyx_ui
     restart: always
 
@@ -82,7 +95,7 @@ services:
 
   nyx_restapi: 
   #image: snuids/nyx_restapi:v0.0.47b
-    image: snuids/nyx_restapi:v1.0.26
+    image: lapin/nyx_restapi:v2.3.0
     container_name: nyx_restapi
     command: gunicorn -b 0.0.0.0:8000 --log-config restapilog.conf -w 3 nyx_rest_api_plus:app
     restart: always
@@ -158,7 +171,7 @@ services:
       - ELK_SSL=false
       - TZ=Europe/Paris
       - RUNNER=1
-      - REPORT_URL=https://YOURSERVER/generatedreports
+      - REPORT_URL=https://15.188.60.111/generatedreports
     volumes:
       - '../logs/:/opt/sources/logs/'
       - '../generatedreports/:/opt/sources/generated/'
@@ -277,20 +290,32 @@ services:
 
 
 ##############################
-  elastalert:
-    image: snuids/elastalert:v0.1.27e
-    container_name: elastalert
-    command: python elastalert.py --verbose
+#  elastalert:
+#    image: snuids/elastalert:v0.1.27e
+#    container_name: elastalert
+#    command: python elastalert.py --verbose
+#    environment:
+#      - TZ=Europe/Paris
+#      - AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials
+#    volumes:
+#      - "../logs/:/home/elastalert/logs"
+#      - "../elastalert/rules:/home/elastalert/rules"
+#      - "../elastalert/config.yaml:/home/elastalert/config.yaml"
+#      - "../elastalert/jira_acct.yaml:/home/elastalert/jira_acct.yaml"
+#    restart: always
+
+
+##############################
+  elastalertrest:
+    image: bitsensor/elastalert:3.0.0-beta.1
+    container_name: elastalertrest
     environment:
       - TZ=Europe/Paris
-      - AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials
     volumes:
-      - "../logs/:/home/elastalert/logs"
-      - "../elastalert/rules:/home/elastalert/rules"
-      - "../elastalert/config.yaml:/home/elastalert/config.yaml"
-      - "../elastalert/jira_acct.yaml:/home/elastalert/jira_acct.yaml"
+      - "../elastalert/rules:/opt/elastalert/rules"
+      - "../elastalert/config.yaml:/opt/elastalert/config.yaml"
+      - "../elastalert/config.json:/opt/elastalert-server/config/config.json"
     restart: always
-
 
 ##############################
   monitordocker:
@@ -347,6 +372,7 @@ services:
       - TZ=Europe/Paris
     volumes:
       - "../kibana/kibanaclassic.yml:/usr/share/kibana/config/kibana.yml"
+      - /home/nyxintall/nyx/kibana/kibana/elastalert-kibana-plugin:/usr/share/kibana/plugins/elastalert-kibana-plugin
     restart: always
 
 
@@ -443,11 +469,10 @@ services:
    ports:
      - 5444:5432
    volumes:
-     - ../postgresql:/var/lib/postgresql/data
+     - /home/nyxintall/nyx/postgresqldata/data:/var/lib/postgresql/data
+#     - pgdata:/var/lib/postgresql/data
 #     - /etc/timezone:/etc/timezone
    environment:
      - POSTGRES_PASSWORD=postgrespass
+
      - TZ=Europe/Paris
-
-
-

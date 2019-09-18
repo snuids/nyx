@@ -6,6 +6,8 @@ server.basePath: /kibana
 elasticsearch.hosts: http://esnodebal:9200
 vega.enableExternalUrls: true
 
+elastalert-kibana-plugin.serverHost: elastalertrest
+
 #xpack.security.enabled: false
 #xpack.graph.enabled: false
 #xpack.reporting.enabled: false

@@ -58,6 +58,8 @@ es_port: 9200
 # elastalert-create-index to set a mapping
 writeback_index: elastalert
 
+skip_invalid: True
+
 # If an alert fails for some reason, ElastAlert will retry
 # sending the alert until this time period has elapsed
 alert_time_limit:

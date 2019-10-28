@@ -65,7 +65,7 @@ process your Data.
 
 ## Using the AWS AMI
 
-The AMI will soon be availabe in the Paris region.
+The AMI will soon be availabe in the Paris region (EU-West-1).
 
 ## Running the platform locally
 

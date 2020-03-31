@@ -47,7 +47,7 @@ Elasticsearch data.
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/overview-apps.gif)
 
 
-## NYX is split in 3 parts:
+## NYX is split in 4 parts:
 
 * [NYX_UI](https://github.com/snuids/nyx_ui) the web interface. You can add your specific interfaces in there to
 increase the End User Experience.
@@ -55,6 +55,7 @@ increase the End User Experience.
 interact with the both Databases.
 * [NYX_CONTAINERS](https://github.com/snuids/nyx_containers) where you can ship your containers to insert, clean and
 process your Data.
+* [NYX_MOB](https://github.com/snuids/nyx_mob) A mobile application used to easily fill forms from a mobile.
 
 
 ## Additional Repositories:

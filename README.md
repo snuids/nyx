@@ -15,10 +15,11 @@ NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and c
 
 - [2 embedded Databases](#2-embedded-databases)
 - [Based on Open source projects](#based-on-open-source-projects)
-- [NYX is split in 3 parts](#based-on-open-source-projects)
+- [NYX is split in 4 parts](#based-on-open-source-projects)
   - [NYX_UI](https://github.com/snuids/nyx_ui)
   - [NYX_REST](https://github.com/snuids/nyx_rest)
   - [NYX_CONTAINERS](https://github.com/snuids/nyx_containers)
+  - [NYX_MOBILE](https://github.com/snuids/nyx_mob)  
 - [Additional repositories](#additional-reporsitories)
   - [NYX_WS_SERVER](https://github.com/snuids/nyx_ws_server)
 - [Getting Started](#getting-started)

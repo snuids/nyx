@@ -5,7 +5,7 @@ The nyx system uses docker as service manager. In order to behave properly, all 
 
 ## Checking docker
 
-In order to interact with docker, the user must as root privileges.
+In order to interact with docker, the user must have root privileges.
 An easy way to list the running containers is to use the following command:
 
 > docker ps -a
@@ -33,11 +33,12 @@ This command should return an empty list.
 
 ### Restarting / Starting stopped containers
 
-The easiest way of starting containers is to use the docker-compose command. It must be executed in the docker-compose folder of the nyx root installation folder.
+The easiest way of starting / restarting containers is to use the **docker-compose up -d** command. It must be executed in the docker-compose folder of the nyx root installation folder.
+
 It is possible to find the folder via the following commands:
 
-> cd / ===> go to root directory
-> find . -name "docker-compose.yml" ===> search recursively the file docker-compose.yml
+> **cd /** ===> go to root directory
+> **find . -name "docker-compose.yml"** ===> search recursively the file docker-compose.yml
 
 ```
 [root@ip-10-10-251-142 ~]# cd /
@@ -47,11 +48,11 @@ find: './proc/699/task/996/fd/424': No such file or directory
 ./home/nyx/backup/tempzip/docker-compose/docker-compose.yml
 ```
 
-In this installation two files where found. The good one is of course the first one because it is not in the backup folder.
+In this installation two files were retrieved. The good one is of course the first one, because it is not in the backup folder.
 
-You can the move to the appropriate directory using the command:
+You can move your sheel to the appropriate directory using the command:
 
-> cd /home/nyx/docker-compose/ =====> Depends on the following result
+> **cd /home/nyx/docker-compose/** =====> Depends on the previous result
 
 Issue then the following command to restart the stopped containers.
 
@@ -81,8 +82,8 @@ If everything is fine, the web site should pop up using the following url:
 
 > https://YOUR_DOMAIN/
 
-If a web site appears and the icon on the first page keep on spinning, this probably means that the rest api is not started properly.
-It is possible to check the rest api itself using the following address:
+If a web site appears and the icon on the first page keep on spinning, this probably means that the REST API is not started properly.
+It is possible to check the REST API itself using the following address:
 
 > https://YOUR_DOMAIN/api/v1/status
 
@@ -90,7 +91,7 @@ This should return the following web page:
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/api_test.png)
 
-If an error such as a 404 or 503 appears, this could be a race condition between containers. In a perfect scenario the nginx container should be started when all the others are up and running.
+If an error such as a 404 or 503 appears, this could be a race condition between containers startup sequence. In a perfect scenario the nginx (web site) container should be started when all the others are up and running.
 
 If the previous problem occurs simply use the following command in the a shell:
 
@@ -100,15 +101,15 @@ Once the container restarted, retry to open the two previous urls in order to ch
 
 ## Advanced checks
 
-The following command will display the last 100 lines of log a specific container. For example, for nginx, you can type:
+The following command will display the last 100 lines of log of a specific container. For example, for nginx, you can type:
 
 >  docker logs --tail 100 nginx
 
-This is useful to understand why a specific container is not starting
+This is useful to understand why a specific container is not starting.
 
 ## Checking disk
 
-Elastic search will not behave porperly if the fill percentage of the disk is greater than 75 %
+Elastic search will not behave porperly if the fill percentage of the disk is greater than 75 %.
 
 It is possible to check the linux partition fill using the following command:
 

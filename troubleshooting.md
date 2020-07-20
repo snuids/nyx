@@ -33,9 +33,11 @@ This command should return an empty list.
 
 ### Restarting / Starting stopped containers
 
-The easiest way of starting / restarting containers is to use the **docker-compose up -d** command. It must be executed in the docker-compose folder of the nyx root installation folder.
+If the list retrieved by the previous command is not empty, it means that some containers must be restarted / started.
 
-It is possible to find the folder via the following commands:
+The easiest way of starting / restarting containers is to use the **docker-compose up -d** command. It must be executed in the docker-compose folder of the NYX root installation folder.
+
+It is possible to find this folder via the following commands:
 
 > **cd /** ===> go to root directory
 
@@ -51,13 +53,13 @@ find: './proc/699/task/996/fd/424': No such file or directory
 
 In this installation two files were retrieved. The good one is of course the first one, because it is not in the backup folder.
 
-You can move your sheel to the appropriate directory using the command:
+You can move your shell to the appropriate directory using the command:
 
 > **cd /home/nyx/docker-compose/** =====> Depends on the previous result
 
 Issue then the following command to restart the stopped containers.
 
-> docker-compose up -d
+> **docker-compose up -d**
 
 ```
 [root@ip-10-10-251-142 /]# cd ./home/nyx/docker-compose/

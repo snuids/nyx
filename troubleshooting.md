@@ -39,13 +39,13 @@ It is possible to find the folder via the following commands:
 > cd / ===> go to root directory
 > find . -name "docker-compose.yml" ===> search recursively the file docker-compose.yml
 
-'''
+```
 [root@ip-10-10-251-142 ~]# cd /
 [root@ip-10-10-251-142 /]# find . -name "docker-compose.yml"
 find: './proc/699/task/996/fd/424': No such file or directory
 ./home/nyx/docker-compose/docker-compose.yml
 ./home/nyx/backup/tempzip/docker-compose/docker-compose.yml
-'''
+```
 
 In this installation two files where found. The good one is of course the first one because it is not in the backup folder.
 
@@ -57,7 +57,7 @@ Issue then the following command to restart the stopped containers.
 
 > docker-compose up -d
 
-'''
+```
 [root@ip-10-10-251-142 /]# cd ./home/nyx/docker-compose/
 [root@ip-10-10-251-142 docker-compose]# docker-compose up -d
 redis is up-to-date
@@ -69,13 +69,8 @@ nyx_reportscheduler is up-to-date
 cerebro is up-to-date
 esnode1 is up-to-date
 postgres is up-to-date
-nodered is up-to-date
-portainer is up-to-date
-camelworker1 is up-to-date
-nyx_ui is up-to-date
-logstash is up-to-date
-logioweb is up-to-date
-nyx_formatconverter is up-to-date
+...
 
-'''
+```
 
+You can reissue the ** docker-compose up -d ** command until the list of containers say that they are all up-to-date.

@@ -89,3 +89,34 @@ It is possible to check the rest api itself using the following address:
 This should return the following web page:
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/api_test.png)
+
+If an error such as a 404 or 503 appears, this could be a race condition between containers. In a perfect scenario the nginx container should be started when all the others are up and running.
+
+If the previous problem occurs simply use the following command in the a shell:
+
+> docker restart nginx
+
+Once the container restarted, retry to open the two previous urls in order to check that everything is started properly
+
+## Advanced checks
+
+The following command will display the last 100 lines of log a specific container. For example, for nginx, you can type:
+
+>  docker logs --tail 100 nginx
+
+This is useful to understand why a specific container is not starting
+
+## Checking disk
+
+Elastic search will not behave porperly if the fill percentage of the disk is greater than 75 %
+
+It is possible to check the linux partition fill using the following command:
+
+> df -h
+
+In order to determine recursively the size of a specific folder, you can use the following command:
+
+> du -sh .
+
+Note that the linux ncdu package can make the research of big files easier.(https://en.wikipedia.org/wiki/Ncdu)
+

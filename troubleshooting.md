@@ -85,3 +85,7 @@ If a web site appears and the icon on the first page keep on spinning, this prob
 It is possible to check the rest api itself using the following address:
 
 > https://YOUR_DOMAIN/api/v1/status
+
+This should return the following web page:
+
+![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/api_test.png)

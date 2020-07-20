@@ -38,6 +38,7 @@ The easiest way of starting / restarting containers is to use the **docker-compo
 It is possible to find the folder via the following commands:
 
 > **cd /** ===> go to root directory
+
 > **find . -name "docker-compose.yml"** ===> search recursively the file docker-compose.yml
 
 ```

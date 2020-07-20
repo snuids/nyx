@@ -1,7 +1,7 @@
 # Troubleshooting
 ## Introduction
 
-The nyx system uses docker as service manager. In order to behave properly, all the containers defined in the system must run.
+The NYX system uses docker as service manager. In order to behave properly, all the containers defined in the system must run.
 
 ## Checking docker
 
@@ -75,7 +75,7 @@ postgres is up-to-date
 
 ```
 
-You can reissue the **docker-compose up -d** command until the list of containers say that they are all up-to-date.
+You can reissue the **docker-compose up -d** command until the list of containers says that they are all up-to-date.
 
 ## Checking the web site
 
@@ -110,7 +110,7 @@ This is useful to understand why a specific container is not starting.
 
 ## Checking disk
 
-Elastic search will not behave porperly if the fill percentage of the disk is greater than 75 %.
+Elastic search will not behave properly if the fill percentage of the disk is greater than 75 %.
 
 It is possible to check the linux partition fill using the following command:
 
@@ -120,5 +120,5 @@ In order to determine recursively the size of a specific folder, you can use the
 
 > du -sh .
 
-Note that the linux ncdu package can make the research of big files easier.(https://en.wikipedia.org/wiki/Ncdu)
+Note that the linux NCDU package can make the research of big files easier.(https://en.wikipedia.org/wiki/Ncdu)
 

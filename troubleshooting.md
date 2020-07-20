@@ -68,32 +68,14 @@ anacondab is up-to-date
 nyx_reportscheduler is up-to-date
 cerebro is up-to-date
 esnode1 is up-to-date
+postgres is up-to-date
 nodered is up-to-date
 portainer is up-to-date
 camelworker1 is up-to-date
 nyx_ui is up-to-date
-logioweb is up-to-date
-nyx_monitor_docker is up-to-date
-nyx_xlsimporter is up-to-date
 logstash is up-to-date
-monitordocker is up-to-date
-elastalert is up-to-date
-kibananyx is up-to-date
-esnode2 is up-to-date
-nyx_rest_helper is up-to-date
+logioweb is up-to-date
 nyx_formatconverter is up-to-date
-kibana is up-to-date
-nyx_lambda_3 is up-to-date
-nyx_lambda_2 is up-to-date
-postgres is up-to-date
-curator is up-to-date
-amqc is up-to-date
-nyx_ws_server is up-to-date
-nyx_mobile is up-to-date
-nyx_reportrunner_1 is up-to-date
-par_import_coswin is up-to-date
-esnodebal is up-to-date
-harvester is up-to-date
-nginx is up-to-date
+
 '''
 

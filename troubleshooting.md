@@ -33,6 +33,67 @@ This command should return an empty list.
 
 ### Restarting / Starting stopped containers
 
+The easiest way of starting containers is to use the docker-compose command. It must be executed in the docker-compose folder of the nyx root installation folder.
+It is possible to find the folder via the following commands:
 
+> cd / ===> go to root directory
+> find . -name "docker-compose.yml" ===> search recursively the file docker-compose.yml
 
+'''
+[root@ip-10-10-251-142 ~]# cd /
+[root@ip-10-10-251-142 /]# find . -name "docker-compose.yml"
+find: './proc/699/task/996/fd/424': No such file or directory
+./home/nyx/docker-compose/docker-compose.yml
+./home/nyx/backup/tempzip/docker-compose/docker-compose.yml
+'''
+
+In this installation two files where found. The good one is of course the first one because it is not in the backup folder.
+
+You can the move to the appropriate directory using the command:
+
+> cd /home/nyx/docker-compose/ =====> Depends on the following result
+
+Issue then the following command to restart the stopped containers.
+
+> docker-compose up -d
+
+'''
+[root@ip-10-10-251-142 /]# cd ./home/nyx/docker-compose/
+[root@ip-10-10-251-142 docker-compose]# docker-compose up -d
+redis is up-to-date
+par_import_kizeo is up-to-date
+openvpn is up-to-date
+nyx_restapi is up-to-date
+anacondab is up-to-date
+nyx_reportscheduler is up-to-date
+cerebro is up-to-date
+esnode1 is up-to-date
+nodered is up-to-date
+portainer is up-to-date
+camelworker1 is up-to-date
+nyx_ui is up-to-date
+logioweb is up-to-date
+nyx_monitor_docker is up-to-date
+nyx_xlsimporter is up-to-date
+logstash is up-to-date
+monitordocker is up-to-date
+elastalert is up-to-date
+kibananyx is up-to-date
+esnode2 is up-to-date
+nyx_rest_helper is up-to-date
+nyx_formatconverter is up-to-date
+kibana is up-to-date
+nyx_lambda_3 is up-to-date
+nyx_lambda_2 is up-to-date
+postgres is up-to-date
+curator is up-to-date
+amqc is up-to-date
+nyx_ws_server is up-to-date
+nyx_mobile is up-to-date
+nyx_reportrunner_1 is up-to-date
+par_import_coswin is up-to-date
+esnodebal is up-to-date
+harvester is up-to-date
+nginx is up-to-date
+'''
 

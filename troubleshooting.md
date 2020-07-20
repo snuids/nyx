@@ -73,4 +73,15 @@ postgres is up-to-date
 
 ```
 
-You can reissue the ** docker-compose up -d ** command until the list of containers say that they are all up-to-date.
+You can reissue the **docker-compose up -d** command until the list of containers say that they are all up-to-date.
+
+## Checking the web site
+
+If everything is fine, the web site should pop up using the following url:
+
+> https://YOUR_DOMAIN/
+
+If a web site appears and the icon on the first page keep on spinning, this probably means that the rest api is not started properly.
+It is possible to check the rest api itself using the following address:
+
+> https://YOUR_DOMAIN/api/v1/status

@@ -71,8 +71,8 @@ The AMI will soon be availabe in the Paris region (EU-West-1).
 
 ## Running the platform locally
 
-[Running Locally](running_locally.md)
-[Troubleshooting](troubleshooting.md)
+* [Running Locally](running_locally.md)
+* [Troubleshooting](troubleshooting.md)
 
 # Architecture
 

@@ -76,6 +76,6 @@ The AMI will soon be availabe in the Paris region (EU-West-1).
 
 # Architecture
 
-[Folder Structure](folder_contents.md)
-[Architecture Schema](https://drive.google.com/file/d/1g4VT_-2BYRa4Z0cPWet74n-LW5VdfMkj/view?usp=sharing)
+* [Folder Structure](folder_contents.md)
+* [Architecture Schema](https://drive.google.com/file/d/1g4VT_-2BYRa4Z0cPWet74n-LW5VdfMkj/view?usp=sharing{:target="_blank"})
 

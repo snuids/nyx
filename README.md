@@ -11,6 +11,8 @@ NYX is based on micro-services [Docker](https://www.docker.com/why-docker) and c
 
 ![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/overview.gif)
 
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=snuids)](https://github.com/anuraghazra/github-readme-stats)
+
 ## Summary
 
 - [2 embedded Databases](#2-embedded-databases)

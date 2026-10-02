@@ -258,7 +258,7 @@
             <bean class="org.apache.activemq.ActiveMQConnectionFactory">
                 <property name="brokerURL" value="tcp://amqc:61616"/>
                 <property name="userName" value="admin"/>
-                <property name="password" value="***REMOVED***"/>
+                <property name="password" value="${AMQC_PASSWORD}"/>
             </bean>
         </property>
     </bean>
@@ -268,7 +268,7 @@
         <property name="driverClassName" value="org.postgresql.Driver" />
         <property name="url" value="jdbc:postgresql://postgres:5432/nyx" />
         <property name="username" value="nyx" />
-        <property name="password" value="***REMOVED***" />
+        <property name="password" value="${PG_PASSWORD}" />
         <property name="timeBetweenEvictionRunsMillis" value="300000" />
         <property name="numTestsPerEvictionRun" value="6" />
         <property name="minEvictableIdleTimeMillis" value="1800000" />

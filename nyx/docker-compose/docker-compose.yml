@@ -34,7 +34,7 @@ services:
       - TZ=Europe/Paris
       - PGHOST=postgres
       - PGDATABASE=nyx
-      - PGPASSWORD=***REMOVED***
+      - PGPASSWORD=${PG_PASSWORD:?set PG_PASSWORD}
       - PGUSER=nyx
 
 ############################################################################################
@@ -107,7 +107,7 @@ services:
       - USE_LOGSTASH=true
       - AMQC_URL=amqc
       - AMQC_LOGIN=admin
-      - AMQC_PASSWORD=***REMOVED***
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
       - AMQC_PORT=61613
       - ELK_URL=esnodebal
       - ELK_LOGIN=
@@ -121,7 +121,7 @@ services:
       - ICON=vial
 
       - PG_LOGIN=nyx
-      - PG_PASSWORD=***REMOVED***
+      - PG_PASSWORD=${PG_PASSWORD:?set PG_PASSWORD}
       - PG_HOST=postgres
       - PG_PORT=5432
       - PG_DATABASE=nyx      
@@ -140,7 +140,7 @@ services:
       - USE_LOGSTASH=true
       - AMQC_URL=amqc
       - AMQC_LOGIN=admin
-      - AMQC_PASSWORD=***REMOVED***
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
       - AMQC_PORT=61613
 
       - ELK_URL=esnodebal
@@ -161,7 +161,7 @@ services:
       - USE_LOGSTASH=true
       - AMQC_URL=amqc
       - AMQC_LOGIN=admin
-      - AMQC_PASSWORD=***REMOVED***
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
       - AMQC_PORT=61613
       - RUNNER=2
       - ELK_URL=esnodebal
@@ -185,7 +185,7 @@ services:
       - USE_LOGSTASH=true
       - AMQC_URL=amqc
       - AMQC_LOGIN=admin
-      - AMQC_PASSWORD=***REMOVED***
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
       - AMQC_PORT=61613
 
       - JDBC_DS=jdbc:elasticsearch://esnodebal:9200
@@ -213,7 +213,7 @@ services:
       - USE_LOGSTASH=true
       - AMQC_URL=amqc
       - AMQC_LOGIN=admin
-      - AMQC_PASSWORD=***REMOVED***
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
       - AMQC_PORT=61613
 
       - ELK_URL=esnodebal
@@ -241,7 +241,7 @@ services:
     restart: always
     environment:
       - ACTIVEMQ_ADMIN_LOGIN=admin
-      - ACTIVEMQ_ADMIN_PASSWORD=***REMOVED***
+      - ACTIVEMQ_ADMIN_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
 
 ################################################
 
@@ -255,7 +255,7 @@ services:
       - USE_LOGSTASH=true
       - AMQC_URL=amqc
       - AMQC_LOGIN=admin
-      - AMQC_PASSWORD=***REMOVED***
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
       - AMQC_PORT=61613
 
       - ELK_URL=esnodebal
@@ -310,6 +310,8 @@ services:
       - INSTANCE_NAME=NyxDemo
       - TZ=Europe/Paris
       - WORKFLOW_NAME=camelworker1
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
+      - PG_PASSWORD=${PG_PASSWORD:?set PG_PASSWORD}
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -Xms256m -Xmx512m
       - _JAVA_OPTIONS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -Xms256m -Xmx512m
 
@@ -506,6 +508,6 @@ services:
 #     - pgdata:/var/lib/postgresql/data
 #     - /etc/timezone:/etc/timezone
    environment:
-     - POSTGRES_PASSWORD=***REMOVED***
+     - POSTGRES_PASSWORD=${PG_PASSWORD:?set PG_PASSWORD}
 
      - TZ=Europe/Paris

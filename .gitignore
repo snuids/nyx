@@ -5,3 +5,7 @@
 **/data/nodes/**
 *.old
 *.st
+.env
+*.key
+*.pem
+*.p12

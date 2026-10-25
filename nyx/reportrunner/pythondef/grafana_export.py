@@ -1015,8 +1015,14 @@ def frame_to_dataframe(query, frame):
 
     columns = unique_columns(fields)
     time_columns = [column for column in columns if column["type"] == "time"]
+    non_time_columns = [column for column in columns if column["type"] != "time"]
+    frame_name = schema.get("name") or ""
+    is_table = not frame_name and (
+        len(non_time_columns) > 1
+        or any(column["type"] in ("string", "other") for column in non_time_columns)
+    )
 
-    if time_columns:
+    if time_columns and not is_table:
         time_index = next(
             index
             for index, column in enumerate(columns)
@@ -1029,10 +1035,16 @@ def frame_to_dataframe(query, frame):
                 continue
             if len(values[index]) != length:
                 continue
+            series_name = column["series"]
+            if frame_name:
+                if len(non_time_columns) == 1:
+                    series_name = frame_name
+                else:
+                    series_name = "%s %s" % (frame_name, column["series"])
             part = pd.DataFrame(
                 {
                     "time": time_values,
-                    "series": column["series"],
+                    "series": series_name,
                     "value": values[index],
                 }
             )
@@ -1046,8 +1058,12 @@ def frame_to_dataframe(query, frame):
 
     data = {}
     for index, column in enumerate(columns):
-        if len(values[index]) == length:
-            data[column["name"]] = values[index]
+        if len(values[index]) != length:
+            continue
+        column_values = values[index]
+        if column["type"] == "time":
+            column_values = to_datetime_series(column_values)
+        data[column["name"]] = column_values
     if not data:
         return None
     result = pd.DataFrame(data)

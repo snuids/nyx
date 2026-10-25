@@ -569,7 +569,15 @@ def resolve_variables(dashboard, overrides, from_ms, to_ms, builtins, warnings):
         for variable in (dashboard.get("templating") or {}).get("list") or []
         if variable.get("name")
     ]
-    resolved = dict(overrides)
+    definition_by_name = {
+        variable.get("name"): variable for variable in definitions
+    }
+    resolved = {}
+    for name, value in overrides.items():
+        variable = definition_by_name.get(name)
+        if variable is not None and is_all_value(value):
+            value = all_value_for_variable(variable)
+        resolved[name] = value
     pending = [
         variable
         for variable in definitions

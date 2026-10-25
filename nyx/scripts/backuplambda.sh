@@ -1,3 +1,4 @@
+: "${BACKUP_ZIP_PASSWORD:?BACKUP_ZIP_PASSWORD is not set}"
 echo "************************"
 echo "* Creating Lambda File *"
 echo "************************"
@@ -48,7 +49,7 @@ newzip="./lambdas/backuplambda.zip"
 echo "- Creating Zip"
 pwd
 echo  "$newzip"
-zip --password ***REMOVED*** -r $newzip ./tempziplambda/
+zip --password "$BACKUP_ZIP_PASSWORD" -r $newzip ./tempziplambda/
 
 
 if test -f "$oldzip"; then

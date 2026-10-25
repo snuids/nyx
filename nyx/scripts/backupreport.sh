@@ -1,3 +1,4 @@
+: "${BACKUP_ZIP_PASSWORD:?BACKUP_ZIP_PASSWORD is not set}"
 echo "************************"
 echo "* Creating Report File *"
 echo "************************"
@@ -44,7 +45,7 @@ oldzip="./reports/backupreport.zip.prev"
 newzip="./reports/backupreport.zip"
 
 echo "- Creating Zip"
-zip --password ***REMOVED*** -r $newzip ./tempzipreport/
+zip --password "$BACKUP_ZIP_PASSWORD" -r $newzip ./tempzipreport/
 
 
 if test -f "$oldzip"; then

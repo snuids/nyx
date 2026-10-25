@@ -9,3 +9,4 @@
 *.key
 *.pem
 *.p12
+nyx/nginx/*.log

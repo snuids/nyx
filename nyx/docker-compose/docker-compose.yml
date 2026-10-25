@@ -120,6 +120,9 @@ services:
       - WELCOMEMESSAGE=LOCAL NYX Platform
       - ICON=vial
 
+      - GRAFANA_URL=${GRAFANA_URL:-}
+      - GRAFANA_API_KEY=${GRAFANA_API_KEY:-}
+
       - PG_LOGIN=nyx
       - PG_PASSWORD=${PG_PASSWORD:?set PG_PASSWORD}
       - PG_HOST=postgres
@@ -198,6 +201,12 @@ services:
       - TZ=Europe/Paris
       - RUNNER=1
       - REPORT_URL=https://test2.nyx-ds.com/generatedreports
+      - GRAFANA_URL=${GRAFANA_URL:-}
+      - GRAFANA_API_KEY=${GRAFANA_API_KEY:-}
+      - GRAFANA_VERIFY_SSL=${GRAFANA_VERIFY_SSL:-true}
+      - GRAFANA_TIMEOUT=${GRAFANA_TIMEOUT:-60}
+      - GRAFANA_MAX_DATAPOINTS=${GRAFANA_MAX_DATAPOINTS:-1000}
+      - GRAFANA_MAX_ROWS_PER_SHEET=${GRAFANA_MAX_ROWS_PER_SHEET:-100000}
     volumes:
       - '../logs/:/opt/sources/logs/'
       - '../generatedreports/:/opt/sources/generated/'

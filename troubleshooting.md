@@ -1,3 +1,5 @@
+[Back](README.md)
+
 # Troubleshooting
 ## Introduction
 
@@ -92,7 +94,7 @@ It is possible to check the REST API itself using the following address:
 
 This should return the following web page:
 
-![Radar](https://raw.githubusercontent.com/snuids/nyx/master/medias/api_test.png)
+![REST API status endpoint returning JSON](https://raw.githubusercontent.com/snuids/nyx/master/medias/api_test.png)
 
 If an error such as a 404 or 503 appears, this could be a race condition between containers startup sequence. In a perfect scenario the nginx (web site) container should be started when all the others are up and running.
 
@@ -122,5 +124,5 @@ In order to determine recursively the size of a specific folder, you can use the
 
 > du -sh .
 
-Note that the linux NCDU package can make the research of big files easier.(https://en.wikipedia.org/wiki/Ncdu)
+Note that the Linux [ncdu](https://en.wikipedia.org/wiki/Ncdu) package makes it easier to find large files.
 

@@ -38,7 +38,7 @@ TLS key that are not in git, are in [Getting started](#getting-started).
 | Capability | Components |
 | --- | --- |
 | Web interface | NYX_UI (Vue.js), served by OpenResty at `/` |
-| REST API | NYX_REST (Python / gunicorn), Swagger UI at `/swaggerui/` |
+| REST API | NYX_REST (Python / gunicorn), Swagger UI at `/api/doc/` |
 | Mobile app | NYX_MOB, served at `/mobile/` (WebSocket server for live updates) |
 | Field-data ingestion | NYX XLS importer, Apache Camel workers, Node-RED at `/nodered/` |
 | Messaging | Apache ActiveMQ (STOMP + AMQC monitoring at `/amqc/`) |
@@ -128,7 +128,7 @@ Then open `https://localhost/`. If nginx answers 404/503, it started before the 
 | Path / port | Service |
 | --- | --- |
 | `/` | NYX web UI |
-| `/api/`, `/swaggerui/`, `/swagger.json` | REST API and its documentation |
+| `/api/`, `/api/doc/`, `/swagger.json` | REST API, its Swagger UI and its OpenAPI description |
 | `/mobile/` | Mobile front-end |
 | `/kibana/`, `/kibananyx/` | Kibana instances (classic and NYX-configured) |
 | `/nodered/`, `/cerebro/`, `/amqc/`, `/ipython/`, `/logs/` | Node-RED, Cerebro, ActiveMQ console, Jupyter, Log.io |
@@ -200,6 +200,13 @@ changing application behaviour usually means bumping an image tag in the compose
 
 ## Documentation
 
+Start with the [documentation index](docs/README.md):
+
+- [Architecture](docs/architecture.md) — services, ports, routes, volumes, known gaps
+- [Broker contract](docs/broker-contract.md) — queues, topics, payloads
+- [Data model](docs/data-model.md) — indices, screens (`nyx_app`), access rules, sessions
+- [REST API](docs/api.md) — endpoints, authentication, exports, error codes
+- [Operations](docs/operations.md) — health checks, upgrades, backups, security checklist
 - [Running the platform locally](running_locally.md)
 - [Troubleshooting](troubleshooting.md) — stopped containers, logs, disk pressure
 - [Folder structure](folder_contents.md)

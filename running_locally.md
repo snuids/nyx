@@ -107,10 +107,12 @@ The certificate in `nyx/certs/` is a demo one, so the browser will warn — acce
 
 Check the API health endpoint:
 
-> https://localhost/api/v1/status
+> https://localhost/api/v1/config
 
-It should return a JSON status page. If you get a 404 or 503, nginx started before the API was
-ready:
+It needs no token and returns the instance configuration (`version`, `welcome`, `icon`,
+`elastic_version`). `/api/v1/status` also exists but requires `?token=`, so it answers
+`{"error": "NO_TOKEN"}` on a fresh installation — use `/api/v1/config` to check liveness. If you
+get a 404 or 503, nginx started before the API was ready:
 
 ```shell
 docker restart nginx
@@ -120,7 +122,8 @@ then reload the two URLs above.
 
 ## Step 8 — log in and explore
 
-The web interface is at `/`, its documentation and API explorer at `/swaggerui/`. Administration
+The web interface is at `/`, the API explorer at `/api/doc/` (the OpenAPI file is
+`/swagger.json`). Administration
 panels are proxied on the same host:
 
 | URL | What it is |

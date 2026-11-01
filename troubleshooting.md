@@ -5,6 +5,9 @@
 
 The NYX system uses docker as service manager. In order to behave properly, all the containers defined in the system must run.
 
+For the full picture — service map, routes, queues, upgrade procedure — see
+[docs/operations.md](docs/operations.md). This page is the quick recovery checklist.
+
 ## Checking docker
 
 In order to interact with docker, the user must have root privileges.
@@ -12,7 +15,12 @@ An easy way to list the running containers is to use the following command:
 
 > docker ps -a
 
-This command should return a list of containers as shown below:
+This command should return every service of the compose file (`nginx`, `nyx_ui`, `nyx_restapi`,
+`nyx_mobile`, `nyx_xlsimporter`, `nyx_lambda`, `nyx_reportrunner_1`, `nyx_scheduler`,
+`nyx_rest_helper`, `camelworker1`, `amqc`, `nodered`, `curator`, `elastalertrest`,
+`monitordocker`, `logioweb`, `harvester`, `kibana`, `kibananyx`, `cerebro`, `esnodebal`,
+`logstash`, `anacondab`, `redis`, `postgres`). Image tags will differ from the sample below —
+they are pinned in `docker-compose.yml`, not here.
 
 ```
 CONTAINER ID        IMAGE                                                 COMMAND                  CREATED             STATUS              PORTS                                                        
@@ -37,7 +45,7 @@ This command should return an empty list.
 
 If the list retrieved by the previous command is not empty, it means that some containers must be restarted / started.
 
-The easiest way of starting / restarting containers is to use the **docker-compose up -d** command. It must be executed in the docker-compose folder of the NYX root installation folder.
+The easiest way of starting / restarting containers is to use the **docker compose up -d** command (Docker Compose v2; the legacy `docker-compose up -d` binary works on the same file). It must be executed in the docker-compose folder of the NYX root installation folder.
 
 It is possible to find this folder via the following commands:
 
@@ -61,7 +69,7 @@ You can move your shell to the appropriate directory using the command:
 
 Issue then the following command to restart the stopped containers.
 
-> **docker-compose up -d**
+> **docker compose up -d**
 
 ```
 [root@ip-10-10-251-142 /]# cd ./home/nyx/docker-compose/
@@ -79,7 +87,7 @@ postgres is up-to-date
 
 ```
 
-You can reissue the **docker-compose up -d** command until the list of containers says that they are all up-to-date.
+You can reissue the **docker compose up -d** command until the list of containers says that they are all up-to-date.
 
 ## Checking the web site
 
@@ -90,11 +98,17 @@ If everything is fine, the web site should pop up using the following url:
 If a web site appears and the icon on the first page keep on spinning, this probably means that the REST API is not started properly.
 It is possible to check the REST API itself using the following address:
 
-> https://YOUR_DOMAIN/api/v1/status
+> https://YOUR_DOMAIN/api/v1/config
 
-This should return the following web page:
+This endpoint needs no token and returns the instance configuration:
 
-![REST API status endpoint returning JSON](https://raw.githubusercontent.com/snuids/nyx/master/medias/api_test.png)
+```json
+{"error":"","status":"ok","version":"3.21.18","welcome":"...","icon":"...","elastic_version":7}
+```
+
+`/api/v1/status` exists as well, but it requires a token (`?token=...`): without one it answers
+`{"error":"NO_TOKEN"}`, which is **not** a sign of a broken API. Use `/api/v1/config` for a
+liveness check.
 
 If an error such as a 404 or 503 appears, this could be a race condition between containers startup sequence. In a perfect scenario the nginx (web site) container should be started when all the others are up and running.
 
@@ -114,7 +128,12 @@ This is useful to understand why a specific container is not starting.
 
 ## Checking disk
 
-Elastic search will not behave properly if the fill percentage of the disk is greater than 75 %.
+Elastic search will not behave properly if the fill percentage of the disk is greater than 75 %:
+it stops allocating shards, and the failures show up far from the cause (logins, imports, reports).
+
+On Linux, if `esnodebal` restarts in a loop, raise the memory map limit:
+
+> sudo sysctl -w vm.max_map_count=262144
 
 It is possible to check the linux partition fill using the following command:
 

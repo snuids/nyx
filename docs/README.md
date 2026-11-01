@@ -14,6 +14,7 @@ compose file and the nginx configuration line by line.
 | [Data model](data-model.md) | you create a screen, a privilege rule or a translation, or you need to know where a setting lives |
 | [REST API](api.md) | you call the API from a script, or you debug a 403/`NO_TOKEN` on a route |
 | [Operations](operations.md) | you deploy, upgrade, back up or troubleshoot an installation |
+| [Automation](automation.md) | you wonder who bumps the image tags after a release |
 | [Running locally](../running_locally.md) | first start on a laptop or a fresh host |
 | [Troubleshooting](../troubleshooting.md) | something is down and you want the checklist |
 | [Folder contents](../folder_contents.md) | you look for a file and want to know what it is for |

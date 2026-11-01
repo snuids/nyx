@@ -1,0 +1,107 @@
+name: Bump compose images
+
+# A release in a component repository does not touch this one, so the stack silently keeps an
+# older image until someone notices (nyx_rest stayed at v2.11.0 while the repository shipped
+# v3.21.x). This job compares what is pinned here with what Docker Hub publishes and opens a pull
+# request with the difference.
+
+on:
+  schedule:
+    # every day at 06:17 UTC — the offset avoids the top of the hour, where GitHub is busiest
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+  # optional: a component workflow can ask for an immediate check
+  #   curl -X POST https://api.github.com/repos/snuids/nyx/dispatches \
+  #     -H "Authorization: Bearer $PAT" -d '{"event_type":"image-published",
+  #     "client_payload":{"image":"snuids/nyx_rest"}}'
+  repository_dispatch:
+    types: [image-published]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: bump-compose-images
+  cancel-in-progress: true
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compare with Docker Hub
+        id: compare
+        env:
+          REQUESTED_IMAGE: ${{ github.event.client_payload.image }}
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet pyyaml
+          if [ -n "${REQUESTED_IMAGE:-}" ]; then
+            python3 scripts/bump_compose_images.py --image "$REQUESTED_IMAGE" --json > report.json
+          else
+            python3 scripts/bump_compose_images.py --json > report.json
+          fi
+          cat report.json | python3 -c "import json,sys; print(len(json.load(sys.stdin)['pending']))" > pending
+          python3 scripts/bump_compose_images.py
+          echo "pending=$(cat pending)" >> "$GITHUB_OUTPUT"
+
+      - name: Apply the bumps
+        if: steps.compare.outputs.pending != '0'
+        run: python3 scripts/bump_compose_images.py --apply
+
+      - name: Check the compose file still parses
+        if: steps.compare.outputs.pending != '0'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import yaml
+          with open("nyx/docker-compose/docker-compose.yml") as handle:
+              data = yaml.safe_load(handle)
+          services = data["services"]
+          assert len(services) > 20, f"unexpected service count: {len(services)}"
+          print(f"yaml ok, {len(services)} services")
+          PY
+
+      - name: Open or update the pull request
+        if: steps.compare.outputs.pending != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BRANCH="chore/compose-image-bump"
+
+          SUMMARY=$(python3 - <<'PY'
+          import json
+          report = json.load(open("report.json"))
+          for record in report["pending"]:
+              print(f"- `{record['repository']}` {record['current']} → {record['latest']}")
+          PY
+          )
+          TITLE=$(python3 - <<'PY'
+          import json
+          report = json.load(open("report.json"))
+          names = [record["repository"].split("/")[-1] for record in report["pending"]]
+          print("chore(compose): bump " + ", ".join(names))
+          PY
+          )
+
+          git config user.name "nyx-bot"
+          git config user.email "nyx-bot@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add nyx/docker-compose/docker-compose.yml
+
+          git commit -m "$TITLE" -m "Opened automatically by .github/workflows/bump-compose-images.yml after comparing the pinned tags with Docker Hub.
+
+          $SUMMARY"
+          git push --force origin "$BRANCH"
+
+          BODY=$(printf 'The images pinned in `nyx/docker-compose/docker-compose.yml` are behind what the component repositories publish.\n\n%s\n\nEvery tag above was resolved from https://hub.docker.com and looks like `vX.Y.Z`. Infrastructure images (postgres, elasticsearch, kibana, redis, openresty, …) are never touched: their version is a platform decision, not a release.\n\nBefore merging: check that the release notes of each component do not require a configuration change, then `docker compose pull && docker compose up -d` on an installation.\n' "$SUMMARY")
+
+          if gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' | grep -q .; then
+            echo "an open pull request already tracks $BRANCH; the push above updated it"
+          else
+            gh pr create --base master --head "$BRANCH" --title "$TITLE" --body "$BODY"
+          fi

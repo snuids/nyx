@@ -7,11 +7,25 @@ files are documentation. `docker-compose.yml` sits in `nyx/docker-compose/`, so 
 paths (`../logs`, `../certs`, …) resolve **inside `nyx/`**, not at the repository root.
 
 ```text
+.
+├── README.md               # overview, quick start, configuration, security
+├── SECURITY.md             # how to report a vulnerability
+├── AGENTS.md               # working notes for coding agents
+├── docs/                   # architecture, broker contract, data model, API, operations
+├── medias/                 # screenshots and the overview animation used by the README
+├── running_locally.md      # first start, step by step
+├── troubleshooting.md      # recovery checklist
+├── folder_contents.md      # this file
+└── nyx/                    # everything the platform runs (detailed below)
+```
+
+```text
 nyx/
 ├── ELK/
 │   ├── esnodebal/conf/          # ACTIVE Elasticsearch 7.2 node
 │   │   ├── elasticsearch.yml
 │   │   └── jvm.options
+│   ├── esnodebal/data/          # leftover node state, committed before the ignore rule
 │   ├── esnode1/                 # reserved: multi-node layout, commented out in compose
 │   ├── esnode2/
 │   └── esnode3/
@@ -38,12 +52,13 @@ nyx/
 ├── logstash/
 │   └── config/
 │       ├── logstash.conf       # pipeline definition (mounted into the container)
+│       ├── logstash.conf.old   # previous pipeline, kept for reference
 │       ├── logstash.yml
 │       ├── jvm.options
 │       ├── pipelines.yml
 │       ├── log4j2.properties
 │       ├── startup.options
-│       └── patterns/
+│       └── patterns/camelworker  # grok pattern used by the pipeline
 ├── nginx/
 │   ├── default.conf            # reverse proxy / routing table for the whole platform
 │   ├── server.crt              # local development certificate
@@ -54,8 +69,9 @@ nyx/
 │   │   ├── myjasper.jrxml
 │   │   ├── myjasper.jasper
 │   │   └── firstjasper.jrxml
-│   └── pythondef/
-│       └── grafana_export.py   # Grafana data export used by the report runner
+│   ├── pythondef/
+│   │   └── grafana_export.py   # Grafana data export used by the report runner
+│   └── generated/              # report output (created at runtime, git-ignored)
 ├── scripts/                    # host-side backup scripts, hardcoded to /home/nyxinstall/nyx
 │   ├── backuplambda.sh
 │   └── backupreport.sh
@@ -66,6 +82,7 @@ nyx/
 
 | Folder | Documentation |
 | --- | --- |
+| `docs/` | The documentation set. Start at [docs/README.md](docs/README.md). |
 | `ELK/` | Elasticsearch node configuration. Only `esnodebal` is started by default; `esnode1`–`3` exist for a multi-node deployment and are commented out in the compose file. |
 | `camelworkers/` | One folder per Camel worker. Each worker is an XML route definition; add more workers by copying the folder and declaring a new service in the compose file. |
 | `certs/` | TLS material mounted at `/etc/certs/` in the nginx container. |
@@ -100,3 +117,12 @@ nyx/reportrunner/generated/     # compiled report output
 Four volumes additionally use hardcoded absolute paths (`/home/nyx/elkdata/esnodebal/data`,
 `/home/nyxinstall/nyx/postgresqldata/data`, and two Kibana plugin directories). See
 [Configuration](README.md#configuration).
+
+## Two leftovers worth knowing about
+
+- `nyx/ELK/esnodebal/data/` contains a few Elasticsearch node-state files (`nodes/0/node.lock`,
+  `_state/node-*.st`) committed before `**/data/nodes/**` was added to `.gitignore`. They are
+  inert; `git rm -r --cached nyx/ELK/esnodebal/data` would remove them from the index without
+  touching a running installation (the live data lives under `/home/nyx/elkdata`).
+- `nyx/logstash/config/logstash.conf.old` is the previous pipeline definition, kept for
+  reference; only `logstash.conf` is mounted into the container.

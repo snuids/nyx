@@ -24,13 +24,15 @@ docker-compose up -d
 
 ## Layout
 
+- `docs/` — architecture, broker contract, data model, REST API, operations. Start at `docs/README.md`.
 - `nyx/docker-compose/docker-compose.yml` — the single source of truth for services, images, ports, env, and volume mounts.
 - `nyx/nginx/default.conf` — reverse proxy / routing table for the whole platform; also adds Basic Auth and Redis-cookie-based auth for Kibana/Node-RED/Cerebro/logs. Adding a proxied service means adding both a compose service and an nginx `location`.
 - `nyx/ELK/` — Elasticsearch node config; only `esnodebal` is active (`discovery.type: single-node`). `esnode1/2/3` are commented out in compose.
 - `nyx/camelworkers/camelworker1/config.xml` — Apache Camel ETL routes (XML).
 - `nyx/logstash/`, `nyx/curator/`, `nyx/elastalert/`, `nyx/kibana/` — pipeline/config files for those containers.
 - `nyx/scripts/*.sh` — host-side backup scripts hardcoded to `/home/nyxinstall/nyx/...`; not runnable from this checkout.
-- `folder_contents.md` is only a rough, partly stale map (e.g. it omits `scripts/` and lists a non-existent `reportrunner/pythondef`). Verify against disk.
+- `folder_contents.md` was checked against the working tree; `reportrunner/pythondef/grafana_export.py` does exist. Still verify paths before quoting them — runtime directories appear and disappear with deployments.
+- `docs/` holds the maintained documentation set (architecture, broker contract, data model, API, operations). Update it in the same change as the wiring: a new service, route, queue or index is undocumented otherwise.
 
 ## Gotchas
 
@@ -42,6 +44,6 @@ docker-compose up -d
 
 ## Docs
 
-- `running_locally.md` — local prerequisites and startup, but incomplete (truncates mid-step).
+- `running_locally.md` — local prerequisites and startup, complete end to end.
 - `troubleshooting.md` — operational recovery: restarting stopped containers, checking logs, disk space (>75% breaks Elasticsearch).
 - `README.md` — high-level architecture and links to the separate component repos.

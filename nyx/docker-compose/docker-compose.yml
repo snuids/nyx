@@ -81,7 +81,7 @@ services:
 
   nyx_ui:
     # Built by nyx_ui/.github/workflows/build-container.yml (tags snuids/nyx_ui:vX.Y.Z)
-    image: snuids/nyx_ui:v3.29.31
+    image: snuids/nyx_ui:v3.30.0
     container_name: nyx_ui
     restart: always
 

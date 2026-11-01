@@ -14,3 +14,7 @@
 nyx/nginx/*.log
 nyx/nginx/*.pid
 nyx/nginx/.htpasswd
+
+# Local tooling state — never part of the deployment
+.playwright-mcp/
+.opencode/

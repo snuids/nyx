@@ -69,7 +69,7 @@ Customer data lives in whatever indices the applications point at. It is only pr
 | `free-text` | static content | `freetext`, `controller: "FreeText"` |
 | `vega` | Vega visualisation | specification, datasource, `controller: "Vega"` |
 | `file-system` | file browser | `rootpath`, `regex` |
-| `internal` | built-in console page | `controller` = component name (`Config`, `User`, `ProcessList`, `ReportList`, `ReportTask`, `SendMessage`, `LogViewer`, `Activity`, …) |
+| `internal` | built-in console page | `controller` = component name. Since `nyx_ui` 3.31.0 the console lists the available pages with a description (`Activity`, `Config`, `User`, `ProcessList`, `ReportList`, `ReportTask`, `ReportPeriodic`, `SendMessage`, `QueryFilter`, `NYXInfo`, `LandingPage`); any other component of `src/components` can still be typed, but only the ones that take a `config` prop render as a page |
 
 `config.controller` resolves against the Vue components directory, which is why an `internal`
 screen can be added without touching the router.

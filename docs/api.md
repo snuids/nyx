@@ -76,6 +76,8 @@ All paths below are relative to `/api/v1/`.
 | `GET grafana/dashboards` | — | dashboards visible to the configured Grafana token |
 | `POST kibana_load` | `?token=&output=` | export of the dashboard query captured by nginx |
 | `POST onfleet_webhook` | Onfleet payload | forwards to `/topic/ONFLEET_WEBHOOK` |
+| `GET config/export` | `?indices=` (optional), admin | the platform design as one JSON bundle (from `nyx_rest` 3.22.0) |
+| `POST config/import` | bundle in the body, `?apply=1`, `?prune=1`, admin | the plan, then what was applied |
 | `GET ui_css` | — | the instance stylesheet |
 
 ## Exports
@@ -107,6 +109,27 @@ status code.
 | `unknown app` / `not allowed` | file or application access refused |
 | `invalid SQL identifier` / `invalid record` | rejected SQL CRUD request |
 | `No answer` / `Unknown lambda or lambda crashed` | the lambda did not reply within 5 s |
+
+## Promoting a configuration between instances
+
+`nyx_rest` 3.22.0 exports the design of an instance — screens (`nyx_app`), index rules
+(`nyx_indice`), privileges, filters, translations, named queries — as one JSON bundle, and computes
+the plan of importing it elsewhere. `nyx_config.py` in that repository is the client:
+
+```shell
+export NYX_TOKEN=...                                   # admin token, kept out of the arguments
+tools/nyx_config.py export --url https://dev -o config/bundle.json
+tools/nyx_config.py plan   config/bundle.json --url https://prod
+tools/nyx_config.py apply  config/bundle.json --url https://prod --yes
+```
+
+Import is a dry run unless `apply=1`, and `apply` needs `--yes`: it prints the plan
+(create/update/unchanged/delete per document, with the changed fields) and exits with code 2
+otherwise. `--prune` also deletes the documents the bundle does not contain.
+
+Not portable, and refused by the validator: `nyx_user` (password hashes), `nyx_apikey`,
+`nyx_config`, the report definitions, the lambdas, and every runtime index. Commit the bundle in
+the infrastructure repository so the platform design becomes reviewable.
 
 ## Behaviour worth knowing
 

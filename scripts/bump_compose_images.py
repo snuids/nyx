@@ -28,12 +28,20 @@ from pathlib import Path
 COMPOSE = Path(__file__).resolve().parents[1] / "nyx" / "docker-compose" / "docker-compose.yml"
 HUB = "https://hub.docker.com/v2/repositories"
 
-# Images published by the component workflows, with the version scheme they follow.
-BUMPED = {
-    "snuids/nyx_ui",
-    "snuids/nyx_rest",
-    "snuids/nyx-reportrunner",
-    "snuids/nyx_lambda",
+# Images whose tag is produced by a build workflow in their repository: a newer `vX.Y.Z` there
+# really is a newer build of the code in that repository.
+CI_BUILT = {
+    "snuids/nyx_ui",           # nyx_ui/.github/workflows/build-container.yml
+    "snuids/nyx_rest",         # nyx_rest/.github/workflows/build-container.yml
+    "snuids/nyx-reportrunner",  # nyx_containers/.github/workflows/build-reportrunner.yml
+    "snuids/nyx_lambda",       # nyx_containers/.github/workflows/build-lambda.yml
+}
+
+# Images of the same family that are NOT built by a workflow. Their Docker Hub tags are published
+# by hand and can lag years behind the source (monitordocker: v0.4.10 is from 2018 while the
+# script in the repository is 1.1.0), so comparing versions would propose an older build dressed
+# as a newer one. They are reported as `manual` and never bumped automatically.
+MANUAL = {
     "snuids/nyx_reportscheduler",
     "snuids/nyx_rest_helper",
     "snuids/nyx_mobile",
@@ -90,7 +98,20 @@ def inspect(compose_path=COMPOSE, only=None):
         if not match:
             continue
         repository, current = split_image(match.group("image"))
-        if repository not in BUMPED:
+        if repository in MANUAL:
+            records.append(
+                {
+                    "line": position,
+                    "indent": match.group("indent"),
+                    "rest": match.group("rest"),
+                    "repository": repository,
+                    "current": current,
+                    "latest": latest_version(repository) if only else "",
+                    "action": "manual",
+                }
+            )
+            continue
+        if repository not in CI_BUILT:
             continue
         if only and repository != only:
             continue

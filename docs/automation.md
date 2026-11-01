@@ -26,11 +26,24 @@ python3 scripts/bump_compose_images.py
 python3 scripts/bump_compose_images.py --image snuids/nyx_rest
 ```
 
-Only the images built by the NYX workflows are considered: `nyx_ui`, `nyx_rest`,
-`nyx-reportrunner`, `nyx_lambda`, `nyx_reportscheduler`, `nyx_rest_helper`, `nyx_mobile`,
-`nyx_xlsimport`, `monitordocker`. The infrastructure images (PostgreSQL, Elasticsearch, Kibana,
-Redis, OpenResty, ActiveMQ, Node-RED, Camel) are never touched: their version is a platform
-decision, and a newer tag is not an upgrade.
+The comparison only covers the images whose tag is produced by a build workflow:
+
+| Bumped | Why |
+| --- | --- |
+| `nyx_ui`, `nyx_rest` | `build-container.yml` in each repository |
+| `nyx-reportrunner`, `nyx_lambda` | `build-reportrunner.yml` / `build-lambda.yml` in `nyx_containers` |
+
+Three other groups are left alone:
+
+- `nyx_reportscheduler`, `nyx_rest_helper`, `nyx_mobile`, `nyx_xlsimport`, `monitordocker` — these
+  have no build workflow, their Docker Hub tags are pushed by hand and can lag years behind the
+  source (`monitordocker` publishes v0.4.10, dated 2018, while the script in the repository is
+  1.1.0). Comparing versions there would propose an older build dressed as a newer one, so they are
+  reported as `manual` and never bumped;
+- the infrastructure images (PostgreSQL, Elasticsearch, Kibana, Redis, OpenResty, ActiveMQ,
+  Node-RED, Camel) — their version is a platform decision, and a newer tag is not an upgrade;
+- any tag that is not `vX.Y.Z`, which is what keeps the job away from the `latest`, `buildcache`
+  and `sha-…` tags the builds also publish.
 
 A candidate tag must look like `vX.Y.Z` — `latest`, `buildcache` and `sha-…` are ignored, which is
 what keeps this safe against the cache tags the build workflows push.

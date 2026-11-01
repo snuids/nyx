@@ -381,7 +381,7 @@ services:
 
 ##############################
   monitordocker:
-    image: snuids/monitordocker:v0.4.5
+    image: snuids/monitordocker:v0.4.10
     container_name: monitordocker
     environment:
       - ELASTIC_ADDRESS=esnodebal:9200

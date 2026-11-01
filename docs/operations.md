@@ -49,7 +49,7 @@ this repository.
    nothing. A release commit therefore carries the version in three places:
    - `package.json` / module `VERSION` bumped,
    - a new entry in that repository's changelog (`versions.md`, or the module docstring),
-   - a commit message starting with the version (`v3.30.0 Add ...`).
+   - a commit message starting with the version (`v3.29.32 Add ...`).
 2. **Confirm the image exists** before touching the compose file:
    `https://hub.docker.com/v2/repositories/snuids/<image>/tags/<tag>` must answer 200.
 3. **Bump the tag** in `nyx/docker-compose/docker-compose.yml`, then:
@@ -64,6 +64,16 @@ curl -sk https://HOST/api/v1/config      # check the reported version
 4. **Read the release notes of the API** before jumping several minor versions: behaviour changes
    (token required on `/api/v1/upload`, allowed roots for `/api/v1/streamfile`, HTTP status codes)
    are documented in the version history at the top of `nyx_rest/sources/nyx_rest_api_plus.py`.
+
+### Release numbering
+
+The **third digit** moves on every release — features included; the first two only change when the
+platform itself does. The repositories' history follows that rule: `nyx_ui` went 3.29.27 → 3.29.31
+and `nyx_rest` 3.21.11 → 3.21.18. The containers use the same scheme (`reportrunner:v1.9.24`).
+
+A release commit therefore reads `v3.29.32 Add an Activity page`, not `v3.30.0 Add ...`: a minor
+bump makes the deployed version jump without telling anyone what changed, and it breaks the
+`vX.Y.Z` sequence the operators read in the console.
 
 Kibana, Elasticsearch and PostgreSQL are pinned platform versions. Upgrading them is a separate
 operation with a data migration, not a tag change.

@@ -16,7 +16,16 @@ This page describes the contract as implemented in `nyx_rest` 3.21.x. When it di
 
 ## Authentication
 
-Almost every route takes a token as a **query parameter**: `?token=<uuid>`.
+Almost every route takes a token. Two forms are accepted, and the header is preferred:
+
+```shell
+curl -sk -H "Authorization: Bearer $TOKEN" https://HOST/api/v1/status   # since 3.22.1
+curl -sk "https://HOST/api/v1/status?token=$TOKEN"                      # historical form
+```
+
+The query parameter ends up in nginx access logs, browser history and `Referer` headers, so it is
+kept only for the console and the mobile app to keep working. Running the API log at `DEBUG` names
+the routes that still receive it.
 
 ```shell
 TOKEN=$(curl -sk -X POST https://HOST/api/v1/cred/login \
@@ -68,6 +77,8 @@ All paths below are relative to `/api/v1/`.
 | `GET streamfile` | `?file=/absolute/path` | last 32 kB of a file, text |
 | `POST upload` | multipart `file`, `?queue=` | publishes to the broker, `{error:""}` |
 | `GET reloadconfig` | — | recomputed menus for the current user |
+| `GET healthz` | — | liveness of Elasticsearch, Redis and the broker (**no token**), 503 when one is down |
+| `GET metrics` | — | Prometheus exposition of the same checks plus per-worker counters (**no token**) |
 | `GET config` | — | instance configuration (**no token required**) |
 | `GET status` | — | `{status, version, name}` (**token required**) |
 | `POST sendmessage` | `{destination, body, headers?}` | writes straight to the broker |
@@ -130,6 +141,22 @@ otherwise. `--prune` also deletes the documents the bundle does not contain.
 Not portable, and refused by the validator: `nyx_user` (password hashes), `nyx_apikey`,
 `nyx_config`, the report definitions, the lambdas, and every runtime index. Commit the bundle in
 the infrastructure repository so the platform design becomes reviewable.
+
+## Probes and metrics
+
+`/api/v1/status` requires a token, so it cannot be a probe. Since `nyx_rest` 3.22.1:
+
+| Endpoint | Answers |
+| --- | --- |
+| `GET /api/v1/healthz` | `{status, version, elasticVersion, checks{elasticsearch, redis, broker}, time}` — **200** when everything is up, **503** otherwise, `Cache-Control: no-store` |
+| `GET /api/v1/metrics` | `nyx_up`, `nyx_info`, `nyx_elasticsearch_up`, `nyx_redis_up`, `nyx_broker_up`, `nyx_broker_life_sign_age_seconds`, `nyx_requests_total`, `nyx_errors_total`, `nyx_active_tokens` |
+
+The broker is up while its life sign on `/topic/NYX_MODULE_INFO` is younger than 30 s (the API
+publishes one every 5 s), which catches a worker that runs but has lost its connection to the
+broker. Neither endpoint leaks a host, a credential or a user.
+
+The counters are per gunicorn worker (three by default): a Prometheus scrape sees whichever worker
+answers, so sum them (`sum by (instance)`) or scrape each worker explicitly.
 
 ## Behaviour worth knowing
 

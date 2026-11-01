@@ -80,15 +80,15 @@ services:
 ################################################################################################
 
   nyx_ui:
-    image: lapin/nyx_ui:v2.23.0
-#    image: snuids/nyx_ui:v2.16.0
+    # Built by nyx_ui/.github/workflows/build-container.yml (tags snuids/nyx_ui:vX.Y.Z)
+    image: snuids/nyx_ui:v3.29.31
     container_name: nyx_ui
     restart: always
 
 ################################################################################################
 
   nyx_mobile:
-    image: snuids/nyx_mobile:v1.0.0
+    image: snuids/nyx_mobile:v1.0.2
     ports:
       - 7654:7654
     container_name: nyx_mobile
@@ -96,9 +96,9 @@ services:
 
 ################################################################################################
 
-  nyx_restapi: 
-  #image: snuids/nyx_restapi:v0.0.47b
-    image: snuids/nyx_restapi_7:v2.11.0
+  nyx_restapi:
+    # Built by nyx_rest/.github/workflows/build-container.yml (image snuids/nyx_rest, tags vX.Y.Z)
+    image: snuids/nyx_rest:v3.21.18
     container_name: nyx_restapi
     command: gunicorn -b 0.0.0.0:8000 --log-config restapilog.conf -w 3 nyx_rest_api_plus:app
     restart: always
@@ -122,6 +122,17 @@ services:
 
       - GRAFANA_URL=${GRAFANA_URL:-}
       - GRAFANA_API_KEY=${GRAFANA_API_KEY:-}
+
+      # Optional API integrations (uncomment what you use):
+      # - STREAM_ALLOWED_ROOTS=/logs,/notebooks        # extra roots for /api/v1/streamfile (admin)
+      # - AD_SERVER=ldap://dc1.example.com,ldap://dc2.example.com
+      # - AD_DOMAIN=EXAMPLE
+      # - AD_BASE_DN=DC=example,DC=com
+      # - GROUP_ROLE_MAP={"NYX-Admins":"admin","NYX-Users":"user"}
+      # - SQLSERVER_HOST=sqlhost
+      # - SQLSERVER_LOGIN=nyx
+      # - SQLSERVER_PASSWORD=change-me
+      # - SQLSERVER_PORT=1433
 
       - PG_LOGIN=nyx
       - PG_PASSWORD=${PG_PASSWORD:?set PG_PASSWORD}
@@ -157,7 +168,8 @@ services:
 ################################################################################################
 
   nyx_lambda:
-    image: snuids/nyx_lambda_7:v1.0.17c
+    # Built by nyx_containers/.github/workflows/build-lambda.yml (image snuids/nyx_lambda)
+    image: snuids/nyx_lambda:v1.6.0
     container_name: nyx_lambda
     restart: always
     environment:
@@ -180,8 +192,8 @@ services:
 ################################################################################################
 
   nyx_reportrunner_1:
-          #    image: snuids/nyx_reportrunner:v0.0.5
-    image: snuids/nyx_reportrunner_7:v1.3.1
+    # Built by nyx_containers/.github/workflows/build-reportrunner.yml (image snuids/nyx-reportrunner)
+    image: snuids/nyx-reportrunner:v1.9.24
     container_name: nyx_reportrunner_1
     restart: always
     environment:
@@ -201,6 +213,10 @@ services:
       - TZ=Europe/Paris
       - RUNNER=1
       - REPORT_URL=https://test2.nyx-ds.com/generatedreports
+      # reportrunner >= 1.9.x renders jasper/jasper_jdbc reports through the
+      # nyx_jasper_creator REST API and fetches datasources from the NYX API.
+      - JASPER_API=${JASPER_API:-http://nyxjasper:8080/api/v1/generate-report}
+      - DATA_SOURCE_API=${DATA_SOURCE_API:-http://nyx_restapi:8000/api/v1/datasource/}
       - GRAFANA_URL=${GRAFANA_URL:-}
       - GRAFANA_API_KEY=${GRAFANA_API_KEY:-}
       - GRAFANA_VERIFY_SSL=${GRAFANA_VERIFY_SSL:-true}
@@ -215,7 +231,7 @@ services:
 ################################################################################################
 
   nyx_scheduler:
-    image: snuids/nyx_reportscheduler:v0.0.4
+    image: snuids/nyx_reportscheduler:v1.0.7
     container_name: nyx_reportscheduler
     restart: always
     environment:
@@ -256,7 +272,7 @@ services:
 
 
   nyx_rest_helper:
-    image: snuids/nyx_rest_helper:v0.0.3
+    image: snuids/nyx_rest_helper:v1.1.0
     container_name: nyx_rest_helper
     restart: always
     environment:
@@ -272,6 +288,13 @@ services:
       - ELK_PASSWORD=
       - ELK_PORT=9200
       - ELK_SSL=false
+
+      # v1.1.0 also serves /queue/REST_LOAD_PGDATA, which needs PostgreSQL access
+      - PG_LOGIN=nyx
+      - PG_PASSWORD=${PG_PASSWORD:?set PG_PASSWORD}
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_DATABASE=nyx
 
       - OUTPUT_FOLDER=./outputs/
       - OUTPUT_URL=https://app.nyx-ds.ovh/generatedreports/rapi/

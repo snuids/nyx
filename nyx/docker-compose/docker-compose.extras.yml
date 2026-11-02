@@ -1,0 +1,44 @@
+version: '2'
+
+# Composants qui tournent sur la production mais ne font pas partie de la stack de base :
+#
+#   ssh-attacks   collecte les tentatives d'intrusion SSH de l'hote pour les cartographier.
+#                 C'est un outil d'exploitation du serveur, pas une brique de la plateforme.
+#   nyx_controls  service de banc d'essai.
+#
+# Ils sont conserves ici pour ne pas les perdre a nouveau : leur absence de ce depot avait
+# deja failli les faire disparaitre lors d'un deploiement. Pour les demarrer avec la stack :
+#
+#   docker compose -f docker-compose.yml -f docker-compose.extras.yml up -d
+#
+# ssh-attacks se construit a partir d'un depot local (/data/nyx/ssh-attacks) qui ne fait pas
+# partie de celui-ci : seule l'image est referencee.
+
+services:
+
+##############################
+  nyx_controls:
+    image: snuids/nyx_controls:v1.5
+    container_name: nyx_controls
+    restart: always
+
+##############################
+  ssh-attacks:
+    image: snuids/ssh-attacks:v1.0.0
+    container_name: ssh-attacks
+    restart: always
+    environment:
+      - ES_URL=http://elasticsearch:9200
+      - AUTH_LOG=/var/log/auth.log
+      - GEOIP_DB=/geolite2/GeoLite2-City.mmdb
+      - GEOIP_ASN_DB=/geolite2/GeoLite2-ASN.mmdb
+      - GEOIP_ONLINE=true
+      - GEOIP_ONLINE_INTERVAL=5
+      - INDEX_PREFIX=security_ssh_attacks
+      - HOST_NAME=${HOST_NAME:-nyx}
+      - POLL_SECONDS=5
+      - START_FROM=beginning
+    volumes:
+      - /var/log:/var/log:ro
+      - ../ssh-attacks/state:/state
+      - ../ssh-attacks/geolite2:/geolite2:ro

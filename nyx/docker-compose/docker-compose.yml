@@ -541,11 +541,6 @@ services:
     volumes:
       - ../logs:/logs
 
-##############################
-  nyx_controls:
-    image: snuids/nyx_controls:v1.5
-    container_name: nyx_controls
-    restart: always
 
 ##############################
   nyx_ws_server:
@@ -586,26 +581,6 @@ services:
 ##############################
 # Construit à partir d'un dépôt local (/data/nyx/ssh-attacks) qui ne fait pas partie de
 # ce dépôt : seule l'image est référencée ici.
-##############################
-  ssh-attacks:
-    image: snuids/ssh-attacks:v1.0.0
-    container_name: ssh-attacks
-    restart: always
-    environment:
-      - ES_URL=http://elasticsearch:9200
-      - AUTH_LOG=/var/log/auth.log
-      - GEOIP_DB=/geolite2/GeoLite2-City.mmdb
-      - GEOIP_ASN_DB=/geolite2/GeoLite2-ASN.mmdb
-      - GEOIP_ONLINE=true
-      - GEOIP_ONLINE_INTERVAL=5
-      - INDEX_PREFIX=security_ssh_attacks
-      - HOST_NAME=${HOST_NAME:-nyx}
-      - POLL_SECONDS=5
-      - START_FROM=beginning
-    volumes:
-      - /var/log:/var/log:ro
-      - ../ssh-attacks/state:/state
-      - ../ssh-attacks/geolite2:/geolite2:ro
 
 ##############################
   postgres:

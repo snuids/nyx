@@ -23,7 +23,7 @@ services:
 
 ##############################
   nodered:
-    image: snuids/nodered:v0.20.8-v10
+    image: nodered/node-red:4.0.9-22
     container_name: nodered
     volumes:
       - ../node_red_data:/data
@@ -81,7 +81,7 @@ services:
 
   nyx_ui:
     # Built by nyx_ui/.github/workflows/build-container.yml (tags snuids/nyx_ui:vX.Y.Z)
-    image: snuids/nyx_ui:v3.31.0
+    image: snuids/nyx_ui:v3.31.14
     container_name: nyx_ui
     restart: always
 
@@ -98,7 +98,7 @@ services:
 
   nyx_restapi:
     # Built by nyx_rest/.github/workflows/build-container.yml (image snuids/nyx_rest, tags vX.Y.Z)
-    image: snuids/nyx_rest:v3.22.1
+    image: snuids/nyx_rest:v3.22.10
     container_name: nyx_restapi
     command: gunicorn -b 0.0.0.0:8000 --log-config restapilog.conf -w 3 nyx_rest_api_plus:app
     restart: always
@@ -234,7 +234,7 @@ services:
 
 ################################################################################################
   amqc:
-    image: snuids/activemq-amqcmonitoring:v5.15.2f
+    image: snuids/activemq-amqcmonitoring:v6.3.2
 #    image: snuids/activemq-amqcmonitoring:v5.15.2f
     ports:
 #      - "8161:8161"
@@ -293,7 +293,9 @@ services:
 ###########################
 
   curator:
-    image: snuids/curator:v0.1.5
+    # Curator 8 lit un actionfile au format courant : celui de la 5.x (voir ../curator/)
+    # ne se charge plus.
+    image: untergeek/curator:8.0.21
     container_name: curator
     volumes:
       - ../curator/action_file.yml:/usr/local/bin/action_file.yml
@@ -301,13 +303,14 @@ services:
  
 ###########################
   redis:
-   image: redis
+   image: redis:7.4.2
    container_name: redis
 
 ###########################
   camelworker1:
           #    image: snuids/camelworker:v1.14.0
-    image: engiecofely/camelworker:v1.14.12a
+    # camel4 remplace camelworker : volumes et variables à revoir avant de démarrer.
+    image: snuids/camel4:v0.15
     container_name: camelworker1
     volumes:
       - ../camelworkers/camelworker1:/camelbin/conf
@@ -360,7 +363,7 @@ services:
 
 ##############################
   monitordocker:
-    image: snuids/monitordocker:v0.4.5
+    image: snuids/nyxmonitordocker:v1.1.0c
     container_name: monitordocker
     environment:
       - ELASTIC_ADDRESS=esnodebal:9200
@@ -372,7 +375,7 @@ services:
 
 ##############################
   nginx:
-    image: openresty/openresty:xenial 
+    image: openresty/openresty:alpine 
     container_name: nginx
     ports:
       - "5701:5701"
@@ -404,7 +407,7 @@ services:
 
 ##############################
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.2.0
+    image: docker.elastic.co/kibana/kibana:8.19.23
     container_name: kibana
     ports:
       - 5801:5601
@@ -420,7 +423,7 @@ services:
 
 ##############################
   kibananyx:
-    image: docker.elastic.co/kibana/kibana:7.2.0
+    image: docker.elastic.co/kibana/kibana:8.19.23
     container_name: kibananyx
     environment:
       - ELASTICSEARCH_URL=http://esnodebal:9200
@@ -433,7 +436,7 @@ services:
 
 ##############################
   cerebro:
-    image: lmenezes/cerebro:0.8.4
+    image: lmenezes/cerebro:0.9.4
     container_name: cerebro
     restart: always
 
@@ -478,7 +481,10 @@ services:
 
 ##############################
   esnodebal:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    # ES 8 refuse de démarrer sans xpack.security.enabled=false ou TLS. La configuration
+    # montée depuis ../ELK/esnodebal/conf/ est encore celle de la 7.2, et les index 7.x
+    # doivent être réindexés avant de passer en 8.x.
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.23
     restart: always
     container_name: esnodebal
     volumes:
@@ -563,7 +569,9 @@ services:
 
 ##############################
   postgres:
-   image: postgres:11.4
+   # 11 -> 14 : pg_upgrade (ou dump/restore) obligatoire, les fichiers de données d'une
+   # version majeure ne sont pas relus par la suivante.
+   image: postgres:14.17
    container_name: postgres
    ports:
      - 5444:5432

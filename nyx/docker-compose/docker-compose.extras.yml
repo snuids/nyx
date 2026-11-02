@@ -1,18 +1,18 @@
 version: '2'
 
-# Composants qui tournent sur la production mais ne font pas partie de la stack de base :
+# Components that run in production but are not part of the base stack:
 #
-#   ssh-attacks   collecte les tentatives d'intrusion SSH de l'hote pour les cartographier.
-#                 C'est un outil d'exploitation du serveur, pas une brique de la plateforme.
-#   nyx_controls  service de banc d'essai.
+#   ssh-attacks   collects the SSH intrusion attempts against the host, to map them.
+#                 It is a server operations tool, not a piece of the platform.
+#   nyx_controls  test-bench service.
 #
-# Ils sont conserves ici pour ne pas les perdre a nouveau : leur absence de ce depot avait
-# deja failli les faire disparaitre lors d'un deploiement. Pour les demarrer avec la stack :
+# They are kept here so they are not lost again: their absence from this repository had
+# already nearly made them disappear during a deployment. To start them with the stack:
 #
 #   docker compose -f docker-compose.yml -f docker-compose.extras.yml up -d
 #
-# ssh-attacks se construit a partir d'un depot local (/data/nyx/ssh-attacks) qui ne fait pas
-# partie de celui-ci : seule l'image est referencee.
+# ssh-attacks is built from a local repository (/data/nyx/ssh-attacks) that is not part of
+# this one, so only the image is referenced.
 
 services:
 

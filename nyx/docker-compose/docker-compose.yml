@@ -293,8 +293,8 @@ services:
 ###########################
 
   curator:
-    # Curator 8 lit un actionfile au format courant : celui de la 5.x (voir ../curator/)
-    # ne se charge plus.
+    # Curator 8 reads an actionfile in the current format: the 5.x one (see ../curator/)
+    # no longer loads.
     image: untergeek/curator:8.0.21
     container_name: curator
     volumes:
@@ -309,7 +309,7 @@ services:
 ###########################
   camelworker1:
           #    image: snuids/camelworker:v1.14.0
-    # camel4 remplace camelworker : volumes et variables à revoir avant de démarrer.
+    # camel4 replaces camelworker: volumes and variables to review before starting.
     image: snuids/camel4:v0.15
     container_name: camelworker1
     volumes:
@@ -481,9 +481,9 @@ services:
 
 ##############################
   esnodebal:
-    # ES 8 refuse de démarrer sans xpack.security.enabled=false ou TLS. La configuration
-    # montée depuis ../ELK/esnodebal/conf/ est encore celle de la 7.2, et les index 7.x
-    # doivent être réindexés avant de passer en 8.x.
+    # ES 8 refuses to start without xpack.security.enabled=false or TLS. The configuration
+    # mounted from ../ELK/esnodebal/conf/ is still the 7.2 one, and the 7.x indices
+    # have to be reindexed before moving to 8.x.
     image: docker.elastic.co/elasticsearch/elasticsearch:8.19.23
     restart: always
     container_name: esnodebal
@@ -515,9 +515,9 @@ services:
       - xpack.monitoring.enabled=false
 
 ##############################
-# Services présents en production mais absents de ce fichier jusqu'au 02/11/2026.
-# Un déploiement depuis ce compose les aurait supprimés. Les valeurs sont celles de la
-# production ; les secrets passent par l'environnement, comme ailleurs dans ce fichier.
+# Services running in production but missing from this file until 02/11/2026.
+# A deployment from this compose would have deleted them. The values are the production
+# ones; secrets come from the environment, as elsewhere in this file.
 ##############################
   nyx_logs:
     image: snuids/nyx_logs:v1.3
@@ -564,13 +564,13 @@ services:
       - ../logs/jaspercreator/:/app/logs/
 
 ##############################
-# Construit à partir d'un dépôt local (/data/nyx/ssh-attacks) qui ne fait pas partie de
-# ce dépôt : seule l'image est référencée ici.
+# Built from a local repository (/data/nyx/ssh-attacks) that is not part of
+# this one: only the image is referenced here.
 
 ##############################
   postgres:
-   # 11 -> 14 : pg_upgrade (ou dump/restore) obligatoire, les fichiers de données d'une
-   # version majeure ne sont pas relus par la suivante.
+   # 11 -> 14: pg_upgrade (or dump/restore) mandatory, the data files of one
+   # major version are not read by the next.
    image: postgres:14.17
    container_name: postgres
    ports:

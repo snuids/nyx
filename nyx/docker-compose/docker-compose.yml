@@ -530,6 +530,84 @@ services:
       - xpack.monitoring.enabled=false
 
 ##############################
+# Services présents en production mais absents de ce fichier jusqu'au 02/11/2026.
+# Un déploiement depuis ce compose les aurait supprimés. Les valeurs sont celles de la
+# production ; les secrets passent par l'environnement, comme ailleurs dans ce fichier.
+##############################
+  nyx_logs:
+    image: snuids/nyx_logs:v1.3
+    container_name: nyx_logs
+    restart: always
+    volumes:
+      - ../logs:/logs
+
+##############################
+  nyx_controls:
+    image: snuids/nyx_controls:v1.5
+    container_name: nyx_controls
+    restart: always
+
+##############################
+  nyx_ws_server:
+    image: snuids/nyx_ws_server:v1.2.3
+    container_name: nyx_ws_server
+    restart: always
+    environment:
+      - USE_LOGSTASH=true
+      - AMQC_URL=amqc
+      - AMQC_LOGIN=admin
+      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
+      - AMQC_PORT=1883
+      - IN_TOPIC=TO_UI
+      - "CONFIG=[{ 'name': 'UI', 'port': 8280 }]"
+
+##############################
+  nyx-jasper-creator:
+    image: snuids/nyx-jasper-creator:1.0.21
+    container_name: nyx-jasper-creator
+    restart: always
+    environment:
+      - ACTIVEMQ_BROKER_URL=tcp://amqc:61616
+      - ACTIVEMQ_USERNAME=admin
+      - ACTIVEMQ_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
+      - ACTIVEMQ_QUEUE_NAME=NYX_CREATEJASPER
+      - ACTIVEMQ_UPLOAD_QUEUE_NAME=JASPER_UPLOAD
+      - ACTIVEMQ_STATUS_TOPIC=RPN_MODULE_INFO
+      - STATUS_INTERVAL_SECONDS=5
+      - MODULE_NAME=NYX_Jasper_Creator
+      - JASPER_OUTPUT_DIRECTORY=reports
+      - REST_API_ENABLED=true
+      - REST_API_PORT=8080
+    volumes:
+      - ../reportrunner/generatedreports:/app/reports
+      - ../jasper/jasperdef:/app/jasperdef
+      - ../logs/jaspercreator/:/app/logs/
+
+##############################
+# Construit à partir d'un dépôt local (/data/nyx/ssh-attacks) qui ne fait pas partie de
+# ce dépôt : seule l'image est référencée ici.
+##############################
+  ssh-attacks:
+    image: snuids/ssh-attacks:v1.0.0
+    container_name: ssh-attacks
+    restart: always
+    environment:
+      - ES_URL=http://elasticsearch:9200
+      - AUTH_LOG=/var/log/auth.log
+      - GEOIP_DB=/geolite2/GeoLite2-City.mmdb
+      - GEOIP_ASN_DB=/geolite2/GeoLite2-ASN.mmdb
+      - GEOIP_ONLINE=true
+      - GEOIP_ONLINE_INTERVAL=5
+      - INDEX_PREFIX=security_ssh_attacks
+      - HOST_NAME=${HOST_NAME:-nyx}
+      - POLL_SECONDS=5
+      - START_FROM=beginning
+    volumes:
+      - /var/log:/var/log:ro
+      - ../ssh-attacks/state:/state
+      - ../ssh-attacks/geolite2:/geolite2:ro
+
+##############################
   postgres:
    image: postgres:11.4
    container_name: postgres

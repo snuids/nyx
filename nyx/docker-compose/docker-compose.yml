@@ -146,27 +146,6 @@ services:
 
 ################################################################################################
 
-  nyx_xlsimporter:
-    image: snuids/nyx_xlsimport:v0.0.4
-    container_name: nyx_xlsimporter
-    restart: always
-    environment:
-      - USE_LOGSTASH=true
-      - AMQC_URL=amqc
-      - AMQC_LOGIN=admin
-      - AMQC_PASSWORD=${AMQC_PASSWORD:?set AMQC_PASSWORD}
-      - AMQC_PORT=61613
-
-      - ELK_URL=esnodebal
-      - ELK_LOGIN=
-      - ELK_PASSWORD=
-      - ELK_PORT=9200
-      - ELK_SSL=false
-    volumes:
-      - '../logs/:/opt/sources/logs/'
-
-################################################################################################
-
   nyx_lambda:
     # Built by nyx_containers/.github/workflows/build-lambda.yml (image snuids/nyx_lambda)
     image: snuids/nyx_lambda:v1.6.0

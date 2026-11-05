@@ -210,7 +210,7 @@ services:
 ################################################################################################
 
   nyx_scheduler:
-    image: snuids/nyx_reportscheduler:v1.0.7
+    image: snuids/nyx_reportscheduler:v1.0.9
     container_name: nyx_reportscheduler
     restart: always
     environment:

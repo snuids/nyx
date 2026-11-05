@@ -52,7 +52,7 @@ TLS key that are not in git, are in [Getting started](#getting-started).
 
 ```mermaid
 flowchart LR
-    clients["Web browser<br/>Mobile app"]
+    clients["Web browser"]
     nginx["OpenResty / nginx<br/>TLS · routing · Basic Auth"]
     app["NYX_UI · NYX_REST<br/>NYX_WS_SERVER<br/>Node-RED · XLS importer<br/>Camel workers · reports"]
     pg[(PostgreSQL)]

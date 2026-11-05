@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-This is the **deployment/config repository** for the NYX platform, not the application source. The actual services (NYX_UI, NYX_REST, NYX_CONTAINERS, NYX_MOB, NYX_WS_SERVER) live in separate GitHub repos and are consumed here as **prebuilt Docker images**. Changing application behavior usually means bumping an image tag in `nyx/docker-compose/docker-compose.yml`, not editing code in this repo.
+This is the **deployment/config repository** for the NYX platform, not the application source. The actual services (NYX_UI, NYX_REST, NYX_CONTAINERS, NYX_WS_SERVER — NYX_MOB is deprecated and archived) live in separate GitHub repos and are consumed here as **prebuilt Docker images**. Changing application behavior usually means bumping an image tag in `nyx/docker-compose/docker-compose.yml`, not editing code in this repo.
 
 Component sources are checked out as sibling repos: the UI (`nyx_ui`) at `../nyx_ui` (`/Users/snuids/Documents/GitHub/nyx_ui`) and the REST API (`nyx_rest`) at `../nyx_rest` (`/Users/snuids/Documents/GitHub/nyx_rest`); each has its own `AGENTS.md`. The Docker images consumed here are built and tagged from those repos, not from this one.
 

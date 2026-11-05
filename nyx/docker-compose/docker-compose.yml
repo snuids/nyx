@@ -87,6 +87,8 @@ services:
 
 ################################################################################################
 
+  # Deprecated: snuids/nyx_mob is archived and its image is frozen at this tag. Kept so the
+  # reference stack still describes the original platform; the running instance has no such service.
   nyx_mobile:
     image: snuids/nyx_mobile:v1.0.2
     ports:

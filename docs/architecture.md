@@ -9,7 +9,7 @@ checks the per-tool session cookie against Redis before proxying anything admini
 
 ```mermaid
 flowchart LR
-    clients["Web browser<br/>Mobile app"]
+    clients["Web browser"]
     nginx["OpenResty (nginx)<br/>TLS · routing · Redis cookie check"]
     app["nyx_ui (Vue)<br/>nyx_rest (gunicorn)<br/>workers (Python)"]
     pg[(PostgreSQL 11.4)]
@@ -39,7 +39,7 @@ truth. This table names the repository and the role.
 | `nginx` | `openresty/openresty` | TLS, routing, Basic Auth, Redis cookie checks |
 | `nyx_ui` | `snuids/nyx_ui` | Web console, served by a small express server on port 7654 |
 | `nyx_restapi` | `snuids/nyx_rest` | REST API, gunicorn with 3 workers on port 8000 |
-| `nyx_mobile` | `snuids/nyx_mobile` | Mobile front-end at `/mobile/` |
+| `nyx_mobile` | `snuids/nyx_mobile` | Mobile front-end at `/mobile/` — **deprecated** (`nyx_mob` archived), not deployed on the current instance |
 | `nyx_xlsimporter` | `snuids/nyx_xlsimport` | Consumes `FILE_UPLOAD_XLS`, loads spreadsheets into Elasticsearch |
 | `nyx_lambda` | `snuids/nyx_lambda` | Runs the notebooks in `notebooks/Lambdas` on interval, message or cron |
 | `nyx_reportrunner_1` | `snuids/nyx-reportrunner` | Renders reports (Jasper, Python, notebooks, Grafana exports) |
@@ -76,7 +76,6 @@ Only a few are meant to be reachable from outside the Docker network:
 | 5801 | `kibana` | Direct Kibana, bypasses nginx (no cookie check) |
 | 5444 → 5432 | `postgres` | Database |
 | 61613, 61614, 61616 | `amqc` | STOMP, STOMP over SSL, OpenWire |
-| 7654 | `nyx_mobile` | Mobile front-end |
 
 The compose file also maps a set of legacy nginx ports (5701, 5702, 8080, 8162, 6601, 9000,
 9001, 444, 61619). They come from older deployments; the platform only needs 80 and 443.
@@ -90,7 +89,6 @@ entry and a `location` block.
 | --- | --- | --- |
 | `/` | `nyx_ui` | session cookie checked by the UI itself |
 | `/api/`, `/swagger.json`, `/swaggerui/` | `nyx_restapi` | token in the request (`?token=`), see [REST API](api.md) |
-| `/mobile/` | `nyx_mobile` | token |
 | `/kibana/`, `/kibananyx/` | `kibana`, `kibananyx` | Lua check of `nyx_kibana` / `nyx_tok` cookie in Redis |
 | `/nodered/` | `nodered` | Lua check of `nyx_nodered` cookie, Basic Auth on the socket |
 | `/cerebro/` | `cerebro` | Lua check of `nyx_cerebro` cookie |

@@ -23,7 +23,7 @@ application code belong to the matching component repository:
 | Web interface | [snuids/nyx_ui](https://github.com/snuids/nyx_ui) |
 | REST API | [snuids/nyx_rest](https://github.com/snuids/nyx_rest) |
 | Container definitions | [snuids/nyx_containers](https://github.com/snuids/nyx_containers) |
-| Mobile application | [snuids/nyx_mob](https://github.com/snuids/nyx_mob) |
+| Mobile application — **deprecated and archived**, no security fixes | [snuids/nyx_mob](https://github.com/snuids/nyx_mob) |
 | WebSocket server | [snuids/nyx_ws_server](https://github.com/snuids/nyx_ws_server) |
 
 Third-party images (Elasticsearch, Kibana, PostgreSQL, ActiveMQ, …) should be reported upstream.

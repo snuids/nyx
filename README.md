@@ -8,7 +8,7 @@
 ![Made with Vue.js](https://img.shields.io/badge/made%20with-vue.js%20%2B%20python-42b883?style=flat-square)
 
 **NYX is a self-hosted data platform for organizations that collect data in the field.**
-It bundles the whole chain — mobile forms, ingestion, storage, analytics and reporting — into
+It bundles the whole chain — form capture, ingestion, storage, analytics and reporting — into
 one Docker Compose stack you can run on-premise or on your own cloud account. You focus on
 functionality; the infrastructure (message broker, databases, reverse proxy, pipelines) is
 already wired together.
@@ -27,7 +27,7 @@ TLS key that are not in git, are in [Getting started](#getting-started).
 
 ## Why NYX
 
-- **Collect data where there is no reliable network.** The mobile app fills forms offline and syncs when connectivity returns.
+- **Collect data where there is no reliable network.** Offline form capture, through the mobile client — **deprecated**, see the component list below.
 - **Turn raw files into queryable data.** The XLS importer and Apache Camel workers clean, reshape and load incoming data automatically.
 - **Answer questions without writing infrastructure.** Dashboards (Kibana, Grafana), Jupyter notebooks and Vega visualizations share the same data.
 - **Ship paper reports on a schedule.** Jasper-based report runner generates PDF/XLS reports on a timer and stores them for download.
@@ -39,7 +39,7 @@ TLS key that are not in git, are in [Getting started](#getting-started).
 | --- | --- |
 | Web interface | NYX_UI (Vue.js), served by OpenResty at `/` |
 | REST API | NYX_REST (Python / gunicorn), Swagger UI at `/api/doc/` |
-| Mobile app | NYX_MOB, served at `/mobile/` (WebSocket server for live updates) |
+| Mobile app | NYX_MOB, served at `/mobile/` — **deprecated, not deployed** on the current instance |
 | Field-data ingestion | NYX XLS importer, Apache Camel workers, Node-RED at `/nodered/` |
 | Messaging | Apache ActiveMQ (STOMP + AMQC monitoring at `/amqc/`) |
 | Structured data | PostgreSQL 11.4 |
@@ -129,7 +129,6 @@ Then open `https://localhost/`. If nginx answers 404/503, it started before the 
 | --- | --- |
 | `/` | NYX web UI |
 | `/api/`, `/api/doc/`, `/swagger.json` | REST API, its Swagger UI and its OpenAPI description |
-| `/mobile/` | Mobile front-end |
 | `/kibana/`, `/kibananyx/` | Kibana instances (classic and NYX-configured) |
 | `/nodered/`, `/cerebro/`, `/amqc/`, `/ipython/`, `/logs/` | Node-RED, Cerebro, ActiveMQ console, Jupyter, Log.io |
 | `/generatedreports/` | Generated report files |
@@ -192,7 +191,7 @@ NYX is split into independent repositories; this one only holds deployment and c
 | [nyx_ui](https://github.com/snuids/nyx_ui) | Web interface (Vue.js) — add your own screens here |
 | [nyx_rest](https://github.com/snuids/nyx_rest) | REST API (Python) — add your own endpoints here |
 | [nyx_containers](https://github.com/snuids/nyx_containers) | Container definitions used to ship, clean and process data |
-| [nyx_mob](https://github.com/snuids/nyx_mob) | Mobile application for form capture |
+| [nyx_mob](https://github.com/snuids/nyx_mob) | Mobile application for form capture — **deprecated and archived**, image frozen at `v1.0.2` (March 2020) |
 | [nyx_ws_server](https://github.com/snuids/nyx_ws_server) | Dispatches ActiveMQ STOMP messages to web sockets |
 
 Application images are built and tagged in those repositories and pulled here by tag, so

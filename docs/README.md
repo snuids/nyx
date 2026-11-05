@@ -29,7 +29,7 @@ compose file and the nginx configuration line by line.
 | [`nyx_containers`](https://github.com/snuids/nyx_containers) | Workers: report runner, report scheduler, XLS importer, lambda runner, format converter, Docker monitor | Images `snuids/nyx-reportrunner`, `snuids/nyx_lambda`, … |
 | [`nyx_ws_server`](https://github.com/snuids/nyx_ws_server) | Broker → WebSocket fan-out per user | Not part of this stack yet (see [Architecture](architecture.md#known-gaps)) |
 | [`nyx_jasper_creator`](https://github.com/snuids/nyx_jasper_creator) | Java JasperReports service (queue + REST) | External service, called by the report runner |
-| [`nyx_mob`](https://github.com/snuids/nyx_mob) | Mobile forms (Quasar), served at `/mobile/` | Image `snuids/nyx_mobile` |
+| [`nyx_mob`](https://github.com/snuids/nyx_mob) | Mobile forms (Quasar), served at `/mobile/` — **deprecated and archived** | Image `snuids/nyx_mobile:v1.0.2` frozen, not deployed |
 
 ## Documenting conventions
 

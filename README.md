@@ -218,4 +218,4 @@ both a compose entry and a `location` block), and never commit real credentials.
 
 ## License
 
-Released under the [Apache License 2.0](LICENSE).
+Released under the [BSD 2-Clause License](LICENSE).

@@ -323,6 +323,8 @@ services:
     restart: always
     environment:
       - SITE_NAME=YOURSERVER
+      # meme valeur que le tag de l image ci-dessus, sans le prefixe snuids/camel4:
+      - CAMEL_WORKER_VERSION=v0.19
       - INSTANCE_NAME=NyxDemo
       - TZ=Europe/Paris
       - WORKFLOW_NAME=camelworker1

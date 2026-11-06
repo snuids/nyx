@@ -236,7 +236,7 @@ services:
 
 ################################################################################################
   amqc:
-    image: snuids/activemq-amqcmonitoring:v6.3.2a
+    image: snuids/activemq-amqcmonitoring:v6.3.3
 #    image: snuids/activemq-amqcmonitoring:v5.15.2f
     ports:
 #      - "8161:8161"

@@ -312,7 +312,7 @@ services:
   camelworker1:
           #    image: snuids/camelworker:v1.14.0
     # camel4 replaces camelworker: volumes and variables to review before starting.
-    image: snuids/camel4:v0.19
+    image: snuids/camel4:v1.2
     container_name: camelworker1
     volumes:
       - ../camelworkers/camelworker1:/camelbin/conf
@@ -324,7 +324,7 @@ services:
     environment:
       - SITE_NAME=YOURSERVER
       # meme valeur que le tag de l image ci-dessus, sans le prefixe snuids/camel4:
-      - CAMEL_WORKER_VERSION=v0.19
+      - CAMEL_WORKER_VERSION=v1.2
       - INSTANCE_NAME=NyxDemo
       - TZ=Europe/Paris
       - WORKFLOW_NAME=camelworker1

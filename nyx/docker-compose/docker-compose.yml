@@ -81,7 +81,7 @@ services:
 
   nyx_ui:
     # Built by nyx_ui/.github/workflows/build-container.yml (tags snuids/nyx_ui:vX.Y.Z)
-    image: snuids/nyx_ui:v3.31.19
+    image: snuids/nyx_ui:v3.31.21
     container_name: nyx_ui
     restart: always
 
@@ -100,7 +100,7 @@ services:
 
   nyx_restapi:
     # Built by nyx_rest/.github/workflows/build-container.yml (image snuids/nyx_rest, tags vX.Y.Z)
-    image: snuids/nyx_rest:v3.22.18
+    image: snuids/nyx_rest:v3.22.20
     container_name: nyx_restapi
     command: gunicorn -b 0.0.0.0:8000 --log-config restapilog.conf -w 3 nyx_rest_api_plus:app
     restart: always
@@ -253,7 +253,7 @@ services:
 
 
   nyx_rest_helper:
-    image: snuids/nyx_rest_helper:v1.1.0
+    image: snuids/nyx_rest_helper:v1.3.0
     container_name: nyx_rest_helper
     restart: always
     environment:
@@ -531,7 +531,7 @@ services:
 
 ##############################
   nyx_ws_server:
-    image: snuids/nyx_ws_server:v1.2.3
+    image: snuids/nyx_ws_server:v1.2.4
     container_name: nyx_ws_server
     restart: always
     environment:

@@ -80,8 +80,11 @@ services:
 ################################################################################################
 
   nyx_ui:
-    # Built by nyx_ui/.github/workflows/build-container.yml (tags snuids/nyx_ui:vX.Y.Z)
-    image: snuids/nyx_ui:v3.31.21
+    # Built by nyx_ui/.github/workflows/build-container.yml (tags snuids/nyx_ui:vX.Y.Z).
+    # v3.0.0 is the Vue 3 console (master); the Vue 2 one lives on branch `v2` and is served under
+    # /nyxv2/ on the instance, from an image built with PUBLIC_PATH=/nyxv2/. This pin is bumped by
+    # hand: the two version lines make "highest tag on Docker Hub" meaningless here.
+    image: snuids/nyx_ui:v3.0.0
     container_name: nyx_ui
     restart: always
 

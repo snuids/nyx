@@ -49,6 +49,15 @@ MANUAL = {
     "snuids/monitordocker",
 }
 
+# Repositories that publish several version lines at once, where the highest tag on Docker Hub is not
+# the newest build. `nyx_ui` is one: the Vue 2 console still releases `v3.31.x` from the `v2` branch
+# (it is served under /nyxv2/) while the line in production is `v3.5.x`, and `3.31.22 > 3.5.0` by
+# semver — so "highest tag" would put the old console back at the root. Bumped by hand when a release
+# is deployed; the tag is the one the build workflow published for the console that shipped.
+TWO_VERSION_LINES = {
+    "snuids/nyx_ui",
+}
+
 SEMVER = re.compile(r"^v?(\d+)\.(\d+)\.(\d+)$")
 IMAGE_LINE = re.compile(r"^(?P<indent>\s*)image:\s*(?P<image>[^\s#]+)(?P<rest>.*)$")
 
@@ -98,7 +107,7 @@ def inspect(compose_path=COMPOSE, only=None):
         if not match:
             continue
         repository, current = split_image(match.group("image"))
-        if repository in MANUAL:
+        if repository in MANUAL or repository in TWO_VERSION_LINES:
             records.append(
                 {
                     "line": position,

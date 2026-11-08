@@ -6,9 +6,11 @@ name: Bump compose images
 # request with the difference.
 
 on:
-  schedule:
-    # every day at 06:17 UTC — the offset avoids the top of the hour, where GitHub is busiest
-    - cron: '17 6 * * *'
+  # No daily schedule. The live stack is deployed from /data/nyx on the host (compose and image
+  # tags bumped by hand at release time, then `docker compose up -d <service>`), so a nightly
+  # comparison of *this* file produced pull requests nobody merged — #20 still proposed v3.22.22
+  # while production was about to run v3.22.23. Run the comparison on demand instead
+  # (`workflow_dispatch`), or dispatch it from a component workflow when its image is published.
   workflow_dispatch:
   # optional: a component workflow can ask for an immediate check
   #   curl -X POST https://api.github.com/repos/snuids/nyx/dispatches \

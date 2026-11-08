@@ -44,7 +44,8 @@ curl -sk "https://HOST/api/v1/generic_search/nyx_app?token=$TOKEN" \
   call again with `doublecode`.
 - LDAP/AD is tried when the local password check fails (`AD_SERVER`, `AD_DOMAIN`, `AD_BASE_DN`,
   `GROUP_ROLE_MAP`).
-- `/api/v1/lambdas/*` is the only route that accepts `?apikey=` instead of a token.
+- `/api/v1/lambdas/*` is the only route that accepts `?apikey=` instead of a token, and that
+  key must be a `nyx_apikey` document: a session token is refused since `nyx_rest` 3.22.23.
 - Every authenticated call is recorded in `nyx_apicalls-YYYY.MM.DD` with a **fingerprint** of the
   token, never the token itself.
 
@@ -86,7 +87,8 @@ All paths below are relative to `/api/v1/`.
 | `POST lambdas/<runner>/<name>` | arbitrary JSON, `?apikey=` | the lambda return value |
 | `GET grafana/dashboards` | — | dashboards visible to the configured Grafana token |
 | `POST kibana_load` | `?token=&output=` | export of the dashboard query captured by nginx |
-| `POST onfleet_webhook` | Onfleet payload | forwards to `/topic/ONFLEET_WEBHOOK` |
+| `GET onfleet_webhook` | `?check=` | echoes the value as `text/plain` (Onfleet's validation) |
+| `POST onfleet_webhook` | Onfleet payload + `X-Nyx-Webhook-Secret` (or `?secret=`) | forwards to `/topic/ONFLEET_WEBHOOK`; **503** when `ONFLEET_WEBHOOK_SECRET` is not configured, 403 on a wrong secret |
 | `GET config/export` | `?indices=` (optional), admin | the platform design as one JSON bundle (from `nyx_rest` 3.22.0) |
 | `POST config/import` | bundle in the body, `?apply=1`, `?prune=1`, admin | the plan, then what was applied |
 | `GET ui_css` | — | the instance stylesheet |
@@ -106,8 +108,11 @@ are converted to the container's timezone.
 
 ## Errors
 
-Errors are returned as `{"error": "<code>"}` with HTTP 200. Check the `error` field, not the
-status code.
+Errors carry `{"error": "<code>"}`. Since `nyx_rest` 3.22.23 the **refusals of the token check**
+answer their own status — 401 for `NO_TOKEN` / `UNKNOWN_TOKEN` (with `WWW-Authenticate: Bearer`), 403
+for `NO_PRIVILEGE` / `MUST_CHANGE_PASSWORD` — while every other error keeps HTTP 200, because the
+console reads that body in `.then()`. So: check the status for "am I authenticated", the `error`
+field for "what went wrong".
 
 | Code | Meaning |
 | --- | --- |

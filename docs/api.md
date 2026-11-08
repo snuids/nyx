@@ -49,6 +49,35 @@ curl -sk "https://HOST/api/v1/generic_search/nyx_app?token=$TOKEN" \
 - Every authenticated call is recorded in `nyx_apicalls-YYYY.MM.DD` with a **fingerprint** of the
   token, never the token itself.
 
+### Signing in with GitHub
+
+An account can sign in from its GitHub identity instead of a password. GitHub says **who** you are;
+`nyx_user` still decides **what you may open** — an identity with no account is refused, and nothing
+is provisioned on the fly.
+
+```shell
+# 1. what to open, and the cookie that goes with it
+curl -sk -c jar.txt https://HOST/api/v1/cred/oauth/state
+# {"error": "", "url": "https://github.com/login/oauth/authorize?..."}
+
+# 2. the browser comes back to https://HOST/oauth?code=...&state=...
+curl -sk -b jar.txt -X POST https://HOST/api/v1/cred/login_github \
+  -H 'Content-Type: application/json' -d '{"code":"...","state":"..."}'
+```
+
+- Three settings are needed: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GITHUB_REDIRECT_URI`
+  (the registered callback, `https://HOST/oauth`). Until all three are set the route answers
+  `{"error": "github login not configured"}` and `/config` says `login.github: false`, so the console
+  shows no button.
+- `state` is one-time (Redis, 10 min) **and** must match an HttpOnly `nyx_oauth_state` cookie: a
+  state obtained in another browser cannot sign anybody in, which is what stops a login CSRF.
+- The account is matched on a **verified** e-mail from GitHub (primary preferred), then on
+  `login.keyword`. A refused identity is written to `nyx_authfail-*` with `NO_ACCOUNT_GITHUB`.
+- The GitHub access token is used and dropped: the session token is minted by the platform like any
+  other login, and the provider token is never stored.
+- The accounts still need `login`, `language` and `privileges` — `computeMenus()` builds the console
+  menus from them, as with a password login.
+
 Roles are checked with `@token_required(...roles)`: `admin` always passes, other users need one
 of the listed privileges. Role checks do **not** protect data — that is the index-level rule
 described in the [data model](data-model.md#access-rules-nyx_indice).

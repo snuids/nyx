@@ -25,7 +25,6 @@ include their prefix (`/queue/NAME`).
 | `/queue/NYX_REPORT_STEP1` | report scheduler | Node-RED | scheduled report job |
 | `/queue/NYX_REPORT_STEP2` | Node-RED | report runner | job to render |
 | `/queue/NYX_REPORT_STEP3` | report runner | Node-RED | render result, follow-up (mail) |
-| `/queue/FILE_UPLOAD_XLS` | API `/api/v1/upload?queue=FILE_UPLOAD_XLS` | XLS importer | base64 spreadsheet + headers |
 | `/queue/REST_LOAD_DATA` | API (export above 5000 rows) | rest_helper | `{index, data, doc_type, download, cui, is_rest_api, user, outputformat}` |
 | `/queue/REST_LOAD_PGDATA` | API (SQL export above the inline threshold) | rest_helper | same shape for a SQL application |
 | `/queue/REST_LOAD_KIBANA` | API (Kibana export above 3000 hits) | rest_helper | `{matchrequest, user, outputformat, is_rest_api}` |

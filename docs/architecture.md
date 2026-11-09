@@ -40,7 +40,6 @@ truth. This table names the repository and the role.
 | `nyx_ui` | `snuids/nyx_ui` | Web console, served by a small express server on port 7654 |
 | `nyx_restapi` | `snuids/nyx_rest` | REST API, gunicorn with 3 workers on port 8000 |
 | `nyx_mobile` | `snuids/nyx_mobile` | Mobile front-end at `/mobile/` — **deprecated** (`nyx_mob` archived), not deployed on the current instance |
-| `nyx_xlsimporter` | `snuids/nyx_xlsimport` | Consumes `FILE_UPLOAD_XLS`, loads spreadsheets into Elasticsearch |
 | `nyx_lambda` | `snuids/nyx_lambda` | Runs the notebooks in `notebooks/Lambdas` on interval, message or cron |
 | `nyx_reportrunner_1` | `snuids/nyx-reportrunner` | Renders reports (Jasper, Python, notebooks, Grafana exports) |
 | `nyx_scheduler` | `snuids/nyx_reportscheduler` | Computes the next runs of the periodic reports |

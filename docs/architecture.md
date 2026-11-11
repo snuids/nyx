@@ -138,16 +138,17 @@ Kibana plugin directories.
    `/api/v1/pg_search` / `/api/v1/pg_generic` (SQL). The API applies the index-level privileges
    and user filters before returning anything.
 5. Exports above the inline threshold, and every report, are handed to the broker and delivered
-   later (file, mail, or WebSocket notification).
+   later (file, mail, or WebSocket notification). The report pipeline — console, API, Node-RED,
+   report runner, Jasper creator, mail — is described step by step in
+   [Report generation](report-flow.md).
 
 ## Known gaps
 
-- **No `nyx_ws_server` service.** The console tries to open `/nyx_ui_websocket/`; the route does
-  not exist in nginx, so live updates and the "report finished" notification added in
-  report runner 1.9.24 are dropped. Adding it requires a compose service *and* an nginx location.
-- **No Jasper service.** Since 1.9.x the report runner renders `jasper` and `jasper_jdbc`
-  reports through the `nyx_jasper_creator` REST API (`JASPER_API`). The image is published but
-  the container is not part of this stack.
+- **The Node-RED flows are not tracked.** They live in the `node_red_data` volume and drive the
+  report pipeline (task document, mail, spreadsheet upload) — see
+  [operations](operations.md#the-node-red-flows). Losing the volume loses the pipeline.
+- **`/queue/NYX_REPORT_STEP1` is not in the API's destination allow-list**, so submitting a report
+  only works for an `admin` account (see [report flow](report-flow.md#known-gaps)).
 - **ElastAlert rules are not tracked.** `elastalertrest` mounts `nyx/elastalert/rules/`,
   `alerts.py` and `elastalert.py`, which are absent from a fresh clone: the container will not
   start until they are provided or the service is commented out.

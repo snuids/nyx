@@ -12,6 +12,7 @@ compose file and the nginx configuration line by line.
 | [Architecture](architecture.md) | you need the service map, the routing table, the volumes, or the request/data flows |
 | [Broker contract](broker-contract.md) | you write or debug a worker: queues, topics, payloads, life signs |
 | [Data model](data-model.md) | you create a screen, a privilege rule or a translation, or you need to know where a setting lives |
+| [Report generation](report-flow.md) | you debug a report that never arrives, or you render one somewhere new: console → API → Node-RED → runner → Jasper → mail |
 | [REST API](api.md) | you call the API from a script, or you debug a 403/`NO_TOKEN` on a route |
 | [Operations](operations.md) | you deploy, upgrade, back up or troubleshoot an installation |
 | [Automation](automation.md) | you wonder who bumps the image tags after a release |

@@ -11,7 +11,8 @@ paths (`../logs`, `../certs`, …) resolve **inside `nyx/`**, not at the reposit
 ├── README.md               # overview, quick start, configuration, security
 ├── SECURITY.md             # how to report a vulnerability
 ├── AGENTS.md               # working notes for coding agents
-├── docs/                   # architecture, broker contract, data model, API, operations
+├── docs/                   # architecture, broker contract, data model, API, operations, report flow
+├── nodered/                # the report flows as source, and the checker that validates them
 ├── medias/                 # screenshots and the overview animation used by the README
 ├── running_locally.md      # first start, step by step
 ├── troubleshooting.md      # recovery checklist

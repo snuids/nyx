@@ -136,8 +136,9 @@ docker logs --tail 100 esnodebal
 ## The Node-RED flows
 
 Node-RED is not a convenience here: it owns the state of a report job and the mail that follows it
-(see [report generation](report-flow.md)). Its flows live in a volume, not in this repository, so
-they are the one piece of the platform a `git pull` cannot restore.
+(see [report generation](report-flow.md)). Its flows live in a volume, and the two that carry the
+report pipeline are versioned in [`nodered/report-flows.json`](../nodered/README.md) — the other flows
+of a host exist only in that volume, so backing it up is still the only protection for them.
 
 ```
 /data/flows.json              # the flows themselves (STEP1 … STEP4, e-mail, uploads)

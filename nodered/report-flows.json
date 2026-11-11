@@ -1,0 +1,360 @@
+[
+  {
+    "id": "c7f8b6082d1f58cf",
+    "type": "tab",
+    "label": "REPORTS (Server)",
+    "disabled": false,
+    "info": "",
+    "env": []
+  },
+  {
+    "id": "814ef76a3cda9374",
+    "type": "tab",
+    "label": "REPORTS (Mail)",
+    "disabled": false,
+    "info": "",
+    "env": []
+  },
+  {
+    "id": "09404e12085e4c56",
+    "type": "function",
+    "z": "814ef76a3cda9374",
+    "name": "function 9",
+    "func": "var org = msg.headers.org;\nmsg.to = msg.payload;\nmsg.replyTo = \"noreply@energy.marmar.ovh\";\nmsg.topic = (org.task && org.task.mailSubject) ? org.task.mailSubject : \"NYX report\";\nmsg.payload = (org.task && org.task.mailTemplate) ? org.task.mailTemplate : \"\";\n// A report that produced no file (it failed) carries an empty download list: the placeholder becomes empty\n// instead of throwing, so the failure notification is actually sent.\nvar url = (org.downloads && org.downloads.length) ? org.downloads[0].url : \"\";\nmsg.payload = msg.payload.replace(/\\$URL\\$/g, url);\n\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 600,
+    "y": 220,
+    "wires": [
+      [
+        "3b2cf8d60888e306"
+      ]
+    ]
+  },
+  {
+    "id": "2a515d8ca66b1cee",
+    "type": "function",
+    "z": "814ef76a3cda9374",
+    "name": "function 7",
+    "func": "msg.headers = { \"org\": msg.payload }\nmsg.payload = msg.payload.task.mailingList\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 220,
+    "y": 220,
+    "wires": [
+      [
+        "5a6346937d0a9b89",
+        "fd49fd21ffa8d402"
+      ]
+    ]
+  },
+  {
+    "id": "3b2cf8d60888e306",
+    "type": "e-mail",
+    "z": "814ef76a3cda9374",
+    "server": "ssl0.ovh.net",
+    "port": "465",
+    "authtype": "BASIC",
+    "saslformat": true,
+    "token": "oauth2Response.access_token",
+    "secure": true,
+    "tls": true,
+    "name": "",
+    "dname": "",
+    "x": 830,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "4702f69d9f2405fd",
+    "type": "debug",
+    "z": "814ef76a3cda9374",
+    "name": "debug 12",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 520,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "56924636.2c1ad",
+    "type": "http request",
+    "z": "c7f8b6082d1f58cf",
+    "name": "",
+    "method": "POST",
+    "ret": "txt",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "basic",
+    "senderr": false,
+    "headers": [],
+    "x": 490,
+    "y": 300,
+    "wires": [
+      [
+        "66573818.4481d8"
+      ]
+    ]
+  },
+  {
+    "id": "58407a04.62e9bc",
+    "type": "stomp out",
+    "z": "c7f8b6082d1f58cf",
+    "name": "TO STEP 2",
+    "server": "7a74511a37a4ad31",
+    "topic": "/queue/NYX_REPORT_STEP2",
+    "x": 770,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "5a6346937d0a9b89",
+    "type": "debug",
+    "z": "814ef76a3cda9374",
+    "name": "debug 11",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 320,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "5f40651.92a8b9c",
+    "type": "stomp in",
+    "z": "c7f8b6082d1f58cf",
+    "name": "STEP1",
+    "server": "7a74511a37a4ad31",
+    "ack": "auto",
+    "topic": "/queue/NYX_REPORT_STEP1",
+    "x": 90,
+    "y": 240,
+    "wires": [
+      [
+        "84833a8c.a815b8",
+        "f0797d728e7d5cfd",
+        "b917cf9cd1264ad6"
+      ]
+    ]
+  },
+  {
+    "id": "66573818.4481d8",
+    "type": "debug",
+    "z": "c7f8b6082d1f58cf",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 750,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "84833a8c.a815b8",
+    "type": "function",
+    "z": "c7f8b6082d1f58cf",
+    "name": "",
+    "func": "var a=new Date();\nvar inddate=a.getFullYear()+\".\"+(((parseInt(a.getMonth())+1<10)?(\"0\"+(parseInt(a.getMonth())+1)):(parseInt(a.getMonth())+1)));\n\nmsg.payload.treatment={\"status\":\"Waiting\",\"creation\":new Date()};\nmsg.payload[\"@timestamp\"]= new Date()\n\nmsg.payload.report=JSON.stringify(msg.payload.report)\n\nmsg.url=\"http://elasticsearch:9200/nyx_reporttask-\"+inddate+\"/_doc/\"+msg.payload[\"id\"]\nmsg.headers={\"Content-Type\": \"application/json\"} \n\nreturn msg;",
+    "outputs": 1,
+    "timeout": "",
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 280,
+    "y": 240,
+    "wires": [
+      [
+        "56924636.2c1ad",
+        "58407a04.62e9bc"
+      ]
+    ]
+  },
+  {
+    "id": "8912310ffc87a2bf",
+    "type": "json",
+    "z": "814ef76a3cda9374",
+    "name": "",
+    "property": "payload",
+    "action": "",
+    "pretty": false,
+    "x": 330,
+    "y": 100,
+    "wires": [
+      [
+        "2a515d8ca66b1cee"
+      ]
+    ]
+  },
+  {
+    "id": "992deb6b.d763b8",
+    "type": "function",
+    "z": "c7f8b6082d1f58cf",
+    "name": "",
+    "func": "var a=new Date();\nvar inddate=a.getFullYear()+\".\"+(((parseInt(a.getMonth())+1<10)?(\"0\"+(parseInt(a.getMonth())+1)):(parseInt(a.getMonth())+1)));\n\nmsg.payload.report=JSON.stringify(msg.payload.report)\n\nmsg.url = \"http://elasticsearch:9200/nyx_reporttask-\" + inddate +\"/_doc/\"+msg.payload[\"id\"]\nmsg.headers={\"Content-Type\": \"application/json\"} \n\nreturn msg;",
+    "outputs": 1,
+    "timeout": "",
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 280,
+    "y": 380,
+    "wires": [
+      [
+        "56924636.2c1ad",
+        "e8a227a8.64eda"
+      ]
+    ]
+  },
+  {
+    "id": "b1c833d6.14aba",
+    "type": "stomp in",
+    "z": "c7f8b6082d1f58cf",
+    "name": "STEP3",
+    "server": "7a74511a37a4ad31",
+    "topic": "/queue/NYX_REPORT_STEP3",
+    "x": 90,
+    "y": 380,
+    "wires": [
+      [
+        "992deb6b.d763b8"
+      ]
+    ]
+  },
+  {
+    "id": "b917cf9cd1264ad6",
+    "type": "debug",
+    "z": "c7f8b6082d1f58cf",
+    "name": "debug 21",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 240,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "e8a227a8.64eda",
+    "type": "json",
+    "z": "c7f8b6082d1f58cf",
+    "name": "",
+    "property": "payload",
+    "action": "",
+    "pretty": false,
+    "x": 490,
+    "y": 380,
+    "wires": [
+      [
+        "fb3006e4.4899c"
+      ]
+    ]
+  },
+  {
+    "id": "f0797d728e7d5cfd",
+    "type": "debug",
+    "z": "c7f8b6082d1f58cf",
+    "name": "debug 20",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "headers",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 160,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "f5cb0d636852712b",
+    "type": "stomp in",
+    "z": "814ef76a3cda9374",
+    "name": "STEP4",
+    "server": "7a74511a37a4ad31",
+    "topic": "/queue/NYX_REPORT_STEP4",
+    "x": 90,
+    "y": 100,
+    "wires": [
+      [
+        "8912310ffc87a2bf",
+        "5a6346937d0a9b89"
+      ]
+    ]
+  },
+  {
+    "id": "fb3006e4.4899c",
+    "type": "stomp out",
+    "z": "c7f8b6082d1f58cf",
+    "name": "TO STEP 4",
+    "server": "7a74511a37a4ad31",
+    "topic": "/queue/NYX_REPORT_STEP4",
+    "x": 750,
+    "y": 380,
+    "wires": []
+  },
+  {
+    "id": "fd49fd21ffa8d402",
+    "type": "split",
+    "z": "814ef76a3cda9374",
+    "name": "",
+    "splt": "\\n",
+    "spltType": "str",
+    "arraySplt": 1,
+    "arraySpltType": "len",
+    "stream": false,
+    "addname": "",
+    "property": "payload",
+    "x": 410,
+    "y": 220,
+    "wires": [
+      [
+        "4702f69d9f2405fd",
+        "09404e12085e4c56"
+      ]
+    ]
+  },
+  {
+    "id": "7a74511a37a4ad31",
+    "type": "stomp-server",
+    "server": "amqc",
+    "port": 61613,
+    "protocolversion": "1.0",
+    "vhost": "",
+    "reconnectretries": "300",
+    "reconnectdelay": "100",
+    "name": ""
+  }
+]

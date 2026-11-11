@@ -30,6 +30,21 @@ once after an import, in the editor.
 commands, demonstrations). Only what the report pipeline needs is here, which is also why the file is
 readable.
 
+## What the target instance must have
+
+The file uses ten node types; nine come from installed packages, and `tab` is Node-RED's own flow
+container:
+
+| type | package |
+| --- | --- |
+| `stomp in`, `stomp out`, `stomp-server` | `node-red-node-stomp` |
+| `e-mail` | `node-red-node-email` |
+| `function`, `http request`, `json`, `split`, `debug` | Node-RED core |
+
+Importing on an instance without the first two creates unknown-type nodes that do nothing until the
+palette is installed (menu → **Manage palette**). Checked against the palette of the production
+instance on 11/11/2026 (Node-RED 4.0.9).
+
 ## Putting it back on a host
 
 Through the editor (`/nodered/`, credentials of the Node-RED instance):

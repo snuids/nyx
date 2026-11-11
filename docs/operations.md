@@ -133,6 +133,34 @@ docker logs --tail 100 esnodebal
 | Containers restart after a reboot | they are `restart: always`, but the host paths are missing | `docker ps -a`, the four absolute paths in the compose file |
 | Everything slow after a while | Elasticsearch disk watermark or heap | `df -h`, `docker logs esnodebal`, `ELK/esnodebal/conf/jvm.options` |
 
+## The Node-RED flows
+
+Node-RED is not a convenience here: it owns the state of a report job and the mail that follows it
+(see [report generation](report-flow.md)). Its flows live in a volume, not in this repository, so
+they are the one piece of the platform a `git pull` cannot restore.
+
+```
+/data/flows.json              # the flows themselves (STEP1 … STEP4, e-mail, uploads)
+/data/.flows_cred.json        # the credentials those nodes reference (SMTP, broker)
+/data/.config.nodes.json      # the installed node palette
+```
+
+Back them up with the rest of the stack (see [backup and restore](#backup-and-restore)) — copying
+`flows.json` alone is not enough: the credential file and the palette are what make it runnable.
+
+Reading a flow without the editor, when you only need to know what a node does:
+
+```bash
+docker exec nodered cat /data/flows.json | python3 -m json.tool | less
+```
+
+Two habits that save time:
+
+- the deployed file carries a timestamped backup next to it (`flows.json.bak-<date>-<reason>`) every
+  time the flow is deployed through the editor — diff against it to see what changed;
+- a node's function body is plain JavaScript in the `func` field: that is where the report pipeline
+  decides the index name (`nyx_reporttask-<YYYY.MM>`), the mail subject and the `$URL$` substitution.
+
 ## Security checklist before exposing the host
 
 - Replace every password in `.env`, and the ones referenced by `nyx/camelworkers`,

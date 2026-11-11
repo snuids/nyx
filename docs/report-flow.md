@@ -15,7 +15,7 @@ This page describes the **pipeline**, not the report definitions themselves (tho
 | Actor | Image | Its part of the job |
 | --- | --- | --- |
 | Console | `snuids/nyx_ui` | Collects the parameters, posts one job to the broker through the API |
-| API | `snuids/nyx_rest` | Checks the destination, publishes the job (`/sendmessage`) |
+| API | `snuids/nyx_rest` | Rebuilds the job from the stored definition and the session, publishes it (`/report/generate`) |
 | Node-RED | `snuids/nodered` | Owns the *state* of the job: creates the task document, then updates it, then mails |
 | Report runner | `snuids/nyx-reportrunner` | Renders the file, writes the downloads, publishes the outcome |
 | Jasper creator | `snuids/nyx_jasper_creator` | Renders `jasper` / `jasper_jdbc` templates over HTTP (external service) |
@@ -30,7 +30,7 @@ console, on the same queue, at the time the periodic definition says.
 console            API              broker            Node-RED        report runner      jasper creator
    |                |                  |                 |                  |                  |
    |-- parameters ->|                  |                 |                  |                  |
-   |  POST /sendmessage -destination-> |                 |                  |                  |
+   |  POST /report/generate ---------->|                 |                  |                  |
    |                |-- publish STEP1 ->|                  |                  |                  |
    |                |                  |- STEP1 --------->|                  |                  |
    |                |                  |                 |-- create task --->|                  |
@@ -56,24 +56,33 @@ builds the dialog from the definition's `parameters` (a `text`, an `interval`, a
 `escombo`…) and, on **Generate**, posts to the API (`ReportGenerator.vue:406`):
 
 ```json
-POST /api/v1/sendmessage?token=<token>
-{ "destination": "/queue/NYX_REPORT_STEP1",
-  "body": "{\"id\":\"id_<rand>_<rand>\",\"creds\":{…},\"report\":{…},\"privileges\":[…],
-           \"task\":{\"mailingList\":[],\"mailingListCc\":[],\"mailingListCci\":[],
-                    \"mailSubject\":\"\",\"mailTemplate\":\"\"}}" }
+POST /api/v1/report/generate?token=<token>
+{ "report": "<id in nyx_reportdef>",
+  "parameters": [{"name": "param2", "value": ["2026-11-03T23:00:00.000Z", "2026-11-10T23:00:00.000Z"]}],
+  "task": {"mailingList": [], "mailingListCc": [], "mailingListCci": [],
+           "mailSubject": "", "mailTemplate": ""} }
 ```
 
-Two details matter when debugging this step. The `creds` object is the **whole session of the
-user**, token included: the rest of the pipeline renders and mails *as that user*. And the `report`
-here is the definition as the console had it, not a reference — a definition edited between the click
-and the run does not change the job in flight.
+The console sends **an identifier and parameter values**, nothing else. That is deliberate: it used to
+build the whole job — definition, privileges, credentials — and post it to `/sendmessage`, which
+refuses everyone but administrators, so generating a report only worked for them.
 
-### 2. The API checks the destination and publishes
+### 2. The API rebuilds the job and publishes it
 
-`/sendmessage` (`nyx_rest/sources/routes/misc.py:201`) refuses any destination outside
-`PLATFORM_DESTINATIONS` unless the caller holds `admin` (`nyx_rest/sources/lib/amq_destinations.py`),
-then publishes the body on the broker. See [known gaps](#known-gaps) — `/queue/NYX_REPORT_STEP1` is
-not in that list.
+`/report/generate` (`nyx_rest/sources/routes/reports.py`) loads the definition from `nyx_reportdef`,
+applies the submitted *values* onto the stored parameters (a name the definition does not declare is
+refused, not added), takes the session from the token, generates the job id, and publishes on
+`/queue/NYX_REPORT_STEP1`. `/report/regenerate` does the same for an existing task, replaying the
+definition snapshot the task carries — only its requester or an administrator may do it.
+
+Two details matter when debugging this step. The `creds` the runner receives are the **whole session
+of the user**, token included: the rest of the pipeline renders and mails *as that user*. And the
+definition is the one stored at submission time, so editing a report while a job is in flight does not
+change that job.
+
+`/sendmessage` (`nyx_rest/sources/routes/misc.py`) still refuses any destination outside
+`PLATFORM_DESTINATIONS` unless the caller is `admin`; the report routes publish on their own
+authority after their own checks, which is why the allow-list does not need to mention STEP1.
 
 ### 3. Node-RED creates the task document
 
@@ -195,17 +204,16 @@ docker exec nodered cat /data/flows.json # the flow itself (STEP1 … STEP4, e-m
 
 Verified on 11/11/2026; listed here so the next reader does not discover them the hard way.
 
-1. **`/queue/NYX_REPORT_STEP1` is not in the API's allow-list.** `PLATFORM_DESTINATIONS` lists the
-   load queues and the two command topics, not the report queues. `/sendmessage` therefore answers
-   `403 destination not allowed` to anyone who is not `admin`, and the generate button of the console
-   is not gated by a privilege: a `reporteditor` user sees the dialog, gets the job refused, and the
-   console only logs "Report list error…" — no visible error. Fixing it by adding the queue to the
-   allow-list would hand every account the ability to forge a job carrying any `creds` it likes (the
-   consumer trusts them), so the right fix is a dedicated route that builds the STEP1 message from the
-   authenticated session.
-2. **The runner logs the Jasper request with the user's token in clear**
-   (`nyx_reportrunner.py:250`, `Posting to Jasper Generator API: {…"token": …}`), and the `jsonUrl` it
-   builds carries the token too. That contradicts the redaction the rest of the worker applies
-   (`redact_message`); the same masking should be applied to that body.
-3. **The Node-RED flows are not in git.** The two report flows and the mail flow exist only in the
-   `node_red_data` volume of a running host; this page is their only written description.
+- **The Node-RED flows are not in git.** The two report flows and the mail flow exist only in the
+  `node_red_data` volume of a running host; this page is their only written description.
+
+Two gaps this page described are closed, and the closing is worth knowing because both changed the
+pipeline described above:
+
+- **the console no longer forges the job.** It posted the definition, the privileges and the user's
+  credentials to `/sendmessage`, which refuses everyone but administrators — so only an administrator
+  could generate a report, and a `reporteditor` account got `403 destination not allowed` with nothing
+  on screen. `/report/generate` and `/report/regenerate` (API 3.22.31, console 3.6.30) take an id and
+  parameter values and rebuild the rest server-side;
+- **the runner no longer logs the user's token** in the Jasper request body (report runner 1.9.33):
+  `redact_message` now also masks `?token=`/`;password=` inside values.

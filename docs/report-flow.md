@@ -98,9 +98,10 @@ then POSTs it to Elasticsearch and forwards the same message to `/queue/NYX_REPO
 This is where a job acquires a visible trace: `nyx_reporttask-*` is what the console's **Tasks** tab
 reads, and a job that never appears there never reached Node-RED.
 
-> The flow itself is not tracked in git (`node_red_data` is a volume). What is written above is what
-> the deployed flow does, read from `/data/flows.json` in the `nodered` container on 11/11/2026, and
-> from the messages the runner logs — see [operations](operations.md#the-node-red-flows).
+> The flow runs from the `node_red_data` volume; a versioned copy of these two flows lives in
+> [`nodered/report-flows.json`](../nodered/README.md). What is written above is what the deployed flow
+> does, read from `/data/flows.json` in the `nodered` container on 11/11/2026 and from the messages the
+> runner logs — see [operations](operations.md#the-node-red-flows).
 
 ### 4. The report runner renders the file
 
@@ -204,8 +205,10 @@ docker exec nodered cat /data/flows.json # the flow itself (STEP1 … STEP4, e-m
 
 Verified on 11/11/2026; listed here so the next reader does not discover them the hard way.
 
-- **The Node-RED flows are not in git.** The two report flows and the mail flow exist only in the
-  `node_red_data` volume of a running host; this page is their only written description.
+- **The flows are a snapshot, not the source of truth.** They live in the `node_red_data` volume of a
+  running host; a copy is versioned in [`nodered/report-flows.json`](../nodered/README.md), and it is
+  the instance that decides what runs. Re-export after a change (the `nodered/` page says how), or the
+  next host restored from the repository will run an older pipeline.
 
 Two gaps this page described are closed, and the closing is worth knowing because both changed the
 pipeline described above:

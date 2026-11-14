@@ -204,6 +204,7 @@ Start with the [documentation index](docs/README.md):
 - [Architecture](docs/architecture.md) — services, ports, routes, volumes, known gaps
 - [Broker contract](docs/broker-contract.md) — queues, topics, payloads
 - [Data model](docs/data-model.md) — indices, screens (`nyx_app`), access rules, sessions
+- [Signing in](docs/authentication.md) — password, Active Directory, GitHub, Entra ID: how each is configured, and who is let through
 - [REST API](docs/api.md) — endpoints, authentication, exports, error codes
 - [Operations](docs/operations.md) — health checks, upgrades, backups, security checklist
 - [Running the platform locally](running_locally.md)

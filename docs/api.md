@@ -16,6 +16,10 @@ This page describes the contract as implemented in `nyx_rest` 3.21.x. When it di
 
 ## Authentication
 
+Configuration of each way in — password, Active Directory, GitHub, Entra ID — the policies that decide
+who is let through, and the troubleshooting table are in [Signing in](authentication.md). What follows
+is the API contract.
+
 Almost every route takes a token. Two forms are accepted, and the header is preferred:
 
 ```shell
@@ -78,6 +82,37 @@ curl -sk -b jar.txt -X POST https://HOST/api/v1/cred/login_github \
 - The accounts still need `login`, `language` and `privileges` — `computeMenus()` builds the console
   menus from them, as with a password login.
 
+### Signing in with Microsoft Entra ID
+
+The same contract, for a directory instead of a profile: `nyx_user` still decides what you may open.
+
+```shell
+# 1. what to open, and the cookie that goes with it
+curl -sk -c jar.txt 'https://HOST/api/v1/cred/oauth/state?provider=entra'
+# {"error": "", "url": "https://login.microsoftonline.com/<tenant>/oauth2/v2.0/authorize?...",
+#  "provider": "entra"}
+
+# 2. the browser comes back to https://HOST/oauth?code=...&state=...
+curl -sk -b jar.txt -X POST https://HOST/api/v1/cred/login_sso \
+  -H 'Content-Type: application/json' -d '{"code":"...","state":"..."}'
+```
+
+- Four settings: `ENTRA_TENANT_ID` (the **directory id**, a GUID — not `contoso.com`),
+  `ENTRA_CLIENT_ID`, `ENTRA_CLIENT_SECRET`, `ENTRA_REDIRECT_URI` (the registered callback,
+  `https://HOST/oauth`, platform **Web**). Until all four are set the route answers
+  `{"error": "entra login not configured"}` and `/config` says `login.entra: false`.
+- The identity token is read from the token endpoint's answer and checked: `aud` is the client id,
+  `tid` is the configured directory, `iss` repeats that directory, `exp`/`nbf` are current, and
+  `nonce` is the one this browser was given. Nothing is read from a token a browser sends.
+- The account is matched on the `email` claim, then on `preferred_username` — full addresses the
+  directory vouches for, never a short name derived from them. A refused identity is written to
+  `nyx_authfail-*` with `NO_ACCOUNT_ENTRA`; `ENTRA_UNKNOWN_ACCOUNTS=inactive` files a disabled
+  account instead, exactly as `GITHUB_UNKNOWN_ACCOUNTS` does.
+- `cred/login_sso` takes either provider: the state record kept in Redis says which one issued it,
+  so the return page does not have to know. `cred/login_entra` names Entra explicitly.
+- MFA and conditional access are Microsoft's: NYX never sees a Microsoft credential, and the
+  `doublePhase` SMS of the password route does not apply.
+
 Roles are checked with `@token_required(...roles)`: `admin` always passes, other users need one
 of the listed privileges. Role checks do **not** protect data — that is the index-level rule
 described in the [data model](data-model.md#access-rules-nyx_indice).
@@ -90,6 +125,10 @@ All paths below are relative to `/api/v1/`.
 | --- | --- | --- |
 | `POST cred/login` | `{login, password, app?, doublecode?}` | `{version, error, cred:{token,user}, menus, all_priv, all_filters}` |
 | `POST cred/login_google` | `{auth_code, app?}` | same shape |
+| `GET cred/oauth/state` | `?provider=github\|entra` | `{error, url, provider}`, plus the one-time `nyx_oauth_state` cookie |
+| `POST cred/login_sso` | `{code, state, app?}` | same shape as `cred/login`; the provider is the one the state was issued for |
+| `POST cred/login_github` | `{code, state, app?}` | same shape; GitHub only |
+| `POST cred/login_entra` | `{code, state, app?}` | same shape; Entra ID only |
 | `GET cred/logout` | `?token=` | `{error:""}`, invalidates the token everywhere |
 | `POST cred/changepassword` | `{old_password, new_password}` | `{error:""}` or `wrongpassword` |
 | `POST cred/resetpassword` | `{login, new_password, queue?}` — roles `admin`, `useradmin` | `{error:""}` |

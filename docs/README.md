@@ -15,6 +15,7 @@ compose file and the nginx configuration line by line.
 | [Report generation](report-flow.md) | you debug a report that never arrives, or you render one somewhere new: console → API → Node-RED → runner → Jasper → mail |
 | [Node-RED flows](../nodered/README.md) | you need to restore, review or re-export the flows behind the report pipeline |
 | [REST API](api.md) | you call the API from a script, or you debug a 403/`NO_TOKEN` on a route |
+| [Signing in](authentication.md) | you add or configure a way to log in, or somebody cannot get in: password, Active Directory, GitHub, Entra ID, and the policies that decide who is let through |
 | [Operations](operations.md) | you deploy, upgrade, back up or troubleshoot an installation |
 | [Automation](automation.md) | you wonder who bumps the image tags after a release |
 | [Running locally](../running_locally.md) | first start on a laptop or a fresh host |

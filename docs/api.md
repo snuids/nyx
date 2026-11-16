@@ -136,9 +136,9 @@ All paths below are relative to `/api/v1/`.
 | `POST pg_search/<appid>` | `{size, page, query, range}` | same shape, from the SQL application |
 | `POST queryFilter/<rec_id>` | `{selected[], timerange?}` | the app's query filters, with their buckets |
 | `GET datasource/<dsid>` | `?start=&end=&flat=` | `{error, records}`, or the bare array with `flat` |
-| `GET generic/<index>/<id>` | `?doc_type=` | `{error, data}` |
-| `POST generic/<index>/<id>` | the document | `{error:""}`; hashes `password` for `nyx_user` |
-| `DELETE generic/<index>/<id>` | — | `{error:""}` |
+| `GET generic/<index>/<id>` | `?doc_type=` | `{error, data, seq_no?, primary_term?}`, with the version as `ETag` |
+| `POST generic/<index>/<id>` | the document, `If-Match: "<seq_no>-<primary_term>"` (optional) | `{error, seq_no, primary_term}`; hashes `password` for `nyx_user`; **409** on a stale version |
+| `DELETE generic/<index>/<id>` | `If-Match` (optional) | `{error:""}`; **409** on a stale version |
 | `GET/POST/DELETE pg_generic/<table>/<col>/<pk>` | `?app=<rec_id>`, body `{record:{...}}` | `{error, data, columns}` |
 | `POST listdir` | `{rec_id, path}` | directory listing |
 | `GET files` | `?rec_id=&path=&files=a,b` | the file, or a ZIP when several are requested |
@@ -173,6 +173,34 @@ Add `?download=1&output=csv` (or `xlsx`) to `generic_search`, `pg_search` or `ki
 
 `exportColumns` in the request body limits and renames the columns (`"field->Header"`), and dates
 are converted to the container's timezone.
+
+## Concurrent writes
+
+Two operators editing the same record used to overwrite each other in silence: `POST
+generic/<index>/<id>` indexed whatever the last browser had loaded. Since `nyx_rest` 3.22.39 the
+write route honours a **precondition**, which the console sends for every row it edited:
+
+```
+GET  generic/rows/42            -> 200, ETag: "7-1", {"error":"", "data":{...}, "seq_no":7, "primary_term":1}
+POST generic/rows/42            -> 200, {"error":"", "seq_no":8, "primary_term":1}
+     If-Match: "7-1"
+POST generic/rows/42            -> 409, {"error":"conflict", "data":{<the document that won>}, "seq_no":9}
+     If-Match: "7-1"               (someone else saved in between: nothing was written)
+```
+
+- The header is `<seq_no>-<primary_term>`, the two numbers Elasticsearch keeps per document; a bare
+  `"7"` is accepted (primary term 1), `W/` is stripped. `?seq_no=7&primary_term=1` works too, for a
+  client that cannot set a header.
+- `If-Match: *` means the document must **exist** (a save must not resurrect a row deleted
+  meanwhile) and answers **412** when it does not.
+- An unreadable header is a **400** (`bad If-Match`): a check silently turned into "no check" is
+  worse than no check.
+- **The header stays optional.** A write without it keeps the historical last-write-wins behaviour,
+  which is what the workers, the mobile clients and the integrations rely on. The PostgreSQL
+  applications are not covered: their tables carry no version column to compare.
+- `generic_search` asks the cluster for `seq_no_primary_term`, so every row of a list carries
+  `_seq_no`/`_primary_term` and the console's cell editor can assert them; the conflict body never
+  contains a `nyx_user` password hash.
 
 ## Errors
 

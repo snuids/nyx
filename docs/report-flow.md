@@ -18,6 +18,7 @@ This page describes the **pipeline**, not the report definitions themselves (tho
 | API | `snuids/nyx_rest` | Rebuilds the job from the stored definition and the session, publishes it (`/report/generate`) |
 | Node-RED | `snuids/nodered` | Owns the *state* of the job: creates the task document, then updates it, then mails |
 | Report runner | `snuids/nyx-reportrunner` | Renders the file, writes the downloads, publishes the outcome |
+| Converter | `gotenberg/gotenberg:9.9.2-libreoffice` | Turns a rendered output into PDF with its embedded LibreOffice |
 | Jasper creator | `snuids/nyx_jasper_creator` | Renders `jasper` / `jasper_jdbc` templates over HTTP (external service) |
 | WS gateway | `snuids/nyx_ws_server` | Delivers the "report ready" notification to the user's browser |
 
@@ -115,8 +116,9 @@ reads, and a job that never appears there never reached Node-RED.
 | `jasper` | a POST to `JASPER_API` (`http://nyx-jasper-creator:8080/api/v1/generate-report`) with the template, the parameters and a `jsonUrl` pointing at `/api/v1/datasource/<datasource>?flat=true&start=…&end=…` |
 | `jasper_jdbc` | the same POST, with the JDBC URL of the datasource instead of the JSON one |
 
-Then, for every requested output: `generatePDF` converts the other formats with
-`./shellscripts/converttopdsf.sh`, the file is checked to exist (a missing output becomes
+Then, for every requested output: `generatePDF` posts each non-pdf format to the converter
+(`CONVERTER_URL`, a Gotenberg container that does only that, LibreOffice inside) and writes the PDF
+it answers next to the output; the file is then checked to exist (a missing output becomes
 `status = "Error"` with the path in the message), and the runner builds the download list:
 
 ```json
@@ -191,6 +193,7 @@ Differences worth knowing:
 
 ```bash
 docker logs -f nyx_reportrunner_1        # one block per job: message, type, JASPER_API call, status
+docker logs nyx_converter | tail -50     # why a PDF was refused (400 = the document, 500 = retry)
 docker logs nodered | tail -50           # flow errors, ES POST failures
 docker exec nodered cat /data/flows.json # the flow itself (STEP1 … STEP4, e-mail)
 ```

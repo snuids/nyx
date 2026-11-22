@@ -118,8 +118,10 @@ reads, and a job that never appears there never reached Node-RED.
 
 Then, for every requested output: `generatePDF` posts each non-pdf format to the converter
 (`CONVERTER_URL`, a Gotenberg container that does only that, LibreOffice inside) and writes the PDF
-it answers next to the output; the file is then checked to exist (a missing output becomes
-`status = "Error"` with the path in the message), and the runner builds the download list:
+it answers next to the output — that PDF is a download in its own right even when the definition
+names only its native format (report runner 1.9.35+); the file is then checked to exist (a missing
+output becomes `status = "Error"` with the path in the message), and the runner builds the download
+list:
 
 ```json
 "downloads": [{"extension": "xlsx",

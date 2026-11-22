@@ -10,6 +10,11 @@ never arrives can be stuck in five different places.
 This page describes the **pipeline**, not the report definitions themselves (those are data: see
 [data model](data-model.md)) and not the queue names in isolation (see [broker contract](broker-contract.md)).
 
+Everything starts in the console's **Reports** tab, which lists the definitions with the formats each
+one produces — the pills are `report.output`, and the play button generates one run from them:
+
+![The Reports tab, in the dark theme: each definition and the formats it produces](images/report-list-dark.png)
+
 ## The actors
 
 | Actor | Image | Its part of the job |
@@ -55,6 +60,8 @@ console            API              broker            Node-RED        report run
 `ReportList.vue` shows the report definitions; the generate button opens `ReportGenerator.vue`, which
 builds the dialog from the definition's `parameters` (a `text`, an `interval`, a `date`, an
 `escombo`…) and, on **Generate**, posts to the API (`ReportGenerator.vue:406`):
+
+![The generate dialog, in the dark theme: the definition's parameters and the e-mail option, nothing else](images/report-generate-dark.png)
 
 ```json
 POST /api/v1/report/generate?token=<token>
@@ -123,6 +130,8 @@ names only its native format (report runner 1.9.35+); the file is then checked t
 output becomes `status = "Error"` with the path in the message), and the runner builds the download
 list:
 
+![The definition editor, in the dark theme: `Output` names the formats the runner must produce, `Generate PDF` adds the converted one](images/report-editor-dark.png)
+
 ```json
 "downloads": [{"extension": "xlsx",
                "url": "https://<host>/generatedreports/<id>.xlsx"}]
@@ -154,6 +163,12 @@ string and the failure notification still goes out.
 > A report is therefore only downloadable while the runner's `generated/` volume holds the file.
 
 ### 6. The console learns about it
+
+The **Tasks** tab is where the outcome is visible: one row per job, its duration, and one pill per
+`downloads` entry — the `docx` and `pdf` of the same conversion below come from one run, the PDF
+added by `generatePDF`.
+
+![The Tasks tab, in the dark theme: docx alone before the definition asked for its PDF, docx and pdf afterwards](images/report-tasks-dark.png)
 
 Two independent paths, and it is worth knowing both:
 

@@ -101,6 +101,12 @@ migration), the third for every re-tag.
 Kibana, Elasticsearch and PostgreSQL are pinned platform versions. Upgrading them is a separate
 operation with a data migration, not a tag change.
 
+**No image in this stack floats.** `:latest` and a bare `openresty/openresty:alpine` were both
+accepted for years, and the second one is what bit: while it floated, the image moved to an nginx
+where `ssl on` no longer exists, and the config stopped loading. A tag change is a commit someone
+reviews; a floating tag is a change nobody sees. Pin the third-party images too, and bump them on
+purpose, with `nginx -t` in between.
+
 ## Backup and restore
 
 There are two kinds of state, and both need saving.

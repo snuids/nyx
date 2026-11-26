@@ -20,7 +20,7 @@ The compose file bind-mounts a number of directories that are not part of the gi
 Create them once, from the `nyx/` folder (the one containing `docker-compose/`):
 
 ```shell
-git clone https://github.com/snuids/nyx.git
+git clone https://github.com/Indian-Runners/nyx.git
 cd nyx/nyx
 mkdir -p logs generatedreports/rapi backup config_backup notebooks \
          node_red_data public_www reportrunnerold reportrunner/generated

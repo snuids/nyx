@@ -1,7 +1,7 @@
 # NYX
 
-![License](https://img.shields.io/github/license/snuids/nyx?style=flat-square)
-![Last commit](https://img.shields.io/github/last-commit/snuids/nyx?style=flat-square)
+![License](https://img.shields.io/github/license/Indian-Runners/nyx?style=flat-square)
+![Last commit](https://img.shields.io/github/last-commit/Indian-Runners/nyx?style=flat-square)
 ![Docker Compose](https://img.shields.io/badge/docker-compose-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Elasticsearch](https://img.shields.io/badge/elasticsearch-7.2-005571?style=flat-square&logo=elasticsearch&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/postgresql-11.4-4169E1?style=flat-square&logo=postgresql&logoColor=white)
@@ -14,7 +14,7 @@ functionality; the infrastructure (message broker, databases, reverse proxy, pip
 already wired together.
 
 ```shell
-git clone https://github.com/snuids/nyx.git
+git clone https://github.com/Indian-Runners/nyx.git
 cd nyx/nyx/docker-compose      # host dirs and a TLS key are needed first — see below
 cp .env.example .env           # set PG_PASSWORD and AMQC_PASSWORD
 docker compose up -d
@@ -23,7 +23,7 @@ docker compose up -d
 Then open `https://localhost/`. Full prerequisites, including the host directories and the
 TLS key that are not in git, are in [Getting started](#getting-started).
 
-![NYX overview](https://raw.githubusercontent.com/snuids/nyx/master/medias/overview.gif)
+![NYX overview](https://raw.githubusercontent.com/Indian-Runners/nyx/master/medias/overview.gif)
 
 ## Why NYX
 
@@ -187,12 +187,12 @@ NYX is split into independent repositories; this one only holds deployment and c
 
 | Repository | Role |
 | --- | --- |
-| [nyx](https://github.com/snuids/nyx) *(this one)* | Docker Compose stack, nginx routing, service configuration, backup scripts |
-| [nyx_ui](https://github.com/snuids/nyx_ui) | Web interface (Vue.js) — add your own screens here |
-| [nyx_rest](https://github.com/snuids/nyx_rest) | REST API (Python) — add your own endpoints here |
-| [nyx_containers](https://github.com/snuids/nyx_containers) | Container definitions used to ship, clean and process data |
-| [nyx_mob](https://github.com/snuids/nyx_mob) | Mobile application for form capture — **deprecated and archived**, image frozen at `v1.0.2` (March 2020) |
-| [nyx_ws_server](https://github.com/snuids/nyx_ws_server) | Dispatches ActiveMQ STOMP messages to web sockets |
+| [nyx](https://github.com/Indian-Runners/nyx) *(this one)* | Docker Compose stack, nginx routing, service configuration, backup scripts |
+| [nyx_ui](https://github.com/Indian-Runners/nyx_ui) | Web interface (Vue.js) — add your own screens here |
+| [nyx_rest](https://github.com/Indian-Runners/nyx_rest) | REST API (Python) — add your own endpoints here |
+| [nyx_containers](https://github.com/Indian-Runners/nyx_containers) | Container definitions used to ship, clean and process data |
+| [nyx_mob](https://github.com/Indian-Runners/nyx_mob) | Mobile application for form capture — **deprecated and archived**, image frozen at `v1.0.2` (March 2020) |
+| [nyx_ws_server](https://github.com/Indian-Runners/nyx_ws_server) | Dispatches ActiveMQ STOMP messages to web sockets |
 
 Application images are built and tagged in those repositories and pulled here by tag, so
 changing application behaviour usually means bumping an image tag in the compose file.

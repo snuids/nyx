@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 Please **do not** open a public issue for security problems. Report them privately through
-GitHub's [Security advisories](https://github.com/snuids/nyx/security/advisories/new) on this
+GitHub's [Security advisories](https://github.com/Indian-Runners/nyx/security/advisories/new) on this
 repository, including:
 
 - the affected file or service,
@@ -20,11 +20,11 @@ application code belong to the matching component repository:
 
 | Component | Repository |
 | --- | --- |
-| Web interface | [snuids/nyx_ui](https://github.com/snuids/nyx_ui) |
-| REST API | [snuids/nyx_rest](https://github.com/snuids/nyx_rest) |
-| Container definitions | [snuids/nyx_containers](https://github.com/snuids/nyx_containers) |
-| Mobile application — **deprecated and archived**, no security fixes | [snuids/nyx_mob](https://github.com/snuids/nyx_mob) |
-| WebSocket server | [snuids/nyx_ws_server](https://github.com/snuids/nyx_ws_server) |
+| Web interface | [snuids/nyx_ui](https://github.com/Indian-Runners/nyx_ui) |
+| REST API | [snuids/nyx_rest](https://github.com/Indian-Runners/nyx_rest) |
+| Container definitions | [snuids/nyx_containers](https://github.com/Indian-Runners/nyx_containers) |
+| Mobile application — **deprecated and archived**, no security fixes | [snuids/nyx_mob](https://github.com/Indian-Runners/nyx_mob) |
+| WebSocket server | [snuids/nyx_ws_server](https://github.com/Indian-Runners/nyx_ws_server) |
 
 Third-party images (Elasticsearch, Kibana, PostgreSQL, ActiveMQ, …) should be reported upstream.
 

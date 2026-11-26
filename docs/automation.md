@@ -55,7 +55,7 @@ it can dispatch the event — this needs a token with `contents: write` on this 
 a secret in the component repository:
 
 ```shell
-curl -X POST https://api.github.com/repos/snuids/nyx/dispatches \
+curl -X POST https://api.github.com/repos/Indian-Runners/nyx/dispatches \
   -H "Authorization: Bearer $PAT" \
   -d '{"event_type":"image-published","client_payload":{"image":"snuids/nyx_rest"}}'
 ```

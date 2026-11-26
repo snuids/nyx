@@ -26,13 +26,13 @@ compose file and the nginx configuration line by line.
 
 | Repository | What it is | How it lands in the stack |
 | --- | --- | --- |
-| [`nyx`](https://github.com/snuids/nyx) (this one) | Compose stack, nginx routing, service configuration, backup scripts | Run directly |
-| [`nyx_rest`](https://github.com/snuids/nyx_rest) | REST API (Flask-RESTX, gunicorn) | Image `snuids/nyx_rest` |
-| [`nyx_ui`](https://github.com/snuids/nyx_ui) | Web console (Vue 2 + Element UI) | Image `snuids/nyx_ui` |
-| [`nyx_containers`](https://github.com/snuids/nyx_containers) | Workers: report runner, report scheduler, XLS importer, lambda runner, format converter, Docker monitor | Images `snuids/nyx-reportrunner`, `snuids/nyx_lambda`, … |
-| [`nyx_ws_server`](https://github.com/snuids/nyx_ws_server) | Broker → WebSocket fan-out per user | Not part of this stack yet (see [Architecture](architecture.md#known-gaps)) |
-| [`nyx_jasper_creator`](https://github.com/snuids/nyx_jasper_creator) | Java JasperReports service (queue + REST) | External service, called by the report runner |
-| [`nyx_mob`](https://github.com/snuids/nyx_mob) | Mobile forms (Quasar), served at `/mobile/` — **deprecated and archived** | Image `snuids/nyx_mobile:v1.0.2` frozen, not deployed |
+| [`nyx`](https://github.com/Indian-Runners/nyx) (this one) | Compose stack, nginx routing, service configuration, backup scripts | Run directly |
+| [`nyx_rest`](https://github.com/Indian-Runners/nyx_rest) | REST API (Flask-RESTX, gunicorn) | Image `snuids/nyx_rest` |
+| [`nyx_ui`](https://github.com/Indian-Runners/nyx_ui) | Web console (Vue 2 + Element UI) | Image `snuids/nyx_ui` |
+| [`nyx_containers`](https://github.com/Indian-Runners/nyx_containers) | Workers: report runner, report scheduler, XLS importer, lambda runner, format converter, Docker monitor | Images `snuids/nyx-reportrunner`, `snuids/nyx_lambda`, … |
+| [`nyx_ws_server`](https://github.com/Indian-Runners/nyx_ws_server) | Broker → WebSocket fan-out per user | Not part of this stack yet (see [Architecture](architecture.md#known-gaps)) |
+| [`nyx_jasper_creator`](https://github.com/Indian-Runners/nyx_jasper_creator) | Java JasperReports service (queue + REST) | External service, called by the report runner |
+| [`nyx_mob`](https://github.com/Indian-Runners/nyx_mob) | Mobile forms (Quasar), served at `/mobile/` — **deprecated and archived** | Image `snuids/nyx_mobile:v1.0.2` frozen, not deployed |
 
 ## Documenting conventions
 

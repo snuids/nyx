@@ -33,6 +33,7 @@ HUB = "https://hub.docker.com/v2/repositories"
 CI_BUILT = {
     "snuids/nyx_ui",           # nyx_ui/.github/workflows/build-container.yml
     "snuids/nyx_rest",         # nyx_rest/.github/workflows/build-container.yml
+    "snuids/nyx_rest_helper",  # nyx_rest/.github/workflows/build-container.yml (Dockerfilehelper)
     "snuids/nyx-reportrunner",  # nyx_containers/.github/workflows/build-reportrunner.yml
     "snuids/nyx_lambda",       # nyx_containers/.github/workflows/build-lambda.yml
 }
@@ -41,9 +42,14 @@ CI_BUILT = {
 # by hand and can lag years behind the source (monitordocker: v0.4.10 is from 2018 while the
 # script in the repository is 1.1.0), so comparing versions would propose an older build dressed
 # as a newer one. They are reported as `manual` and never bumped automatically.
+#
+# `nyx_rest_helper` used to belong here, and the classification is what let it drift: it has been
+# built by `nyx_rest/.github/workflows/build-container.yml` (`Dockerfilehelper`, from the API image
+# of the same tag) since 3.22.x, so production ran v3.22.29 with the API at v3.22.39 — ten releases
+# of fixes missing in the worker that exports the data. Every entry here must be re-checked when a
+# workflow starts publishing it: the tag being pushed by hand is the reason, never the image name.
 MANUAL = {
     "snuids/nyx_reportscheduler",
-    "snuids/nyx_rest_helper",
     "snuids/nyx_mobile",
     "snuids/nyx_xlsimport",
     "snuids/monitordocker",

@@ -13,7 +13,7 @@ when an image is behind.
 
 | | |
 | --- | --- |
-| Runs | every day at 06:17 UTC, on demand (`workflow_dispatch`), and on a `repository_dispatch` of type `image-published` |
+| Runs | on demand (`workflow_dispatch`) and on a `repository_dispatch` of type `image-published` |
 | Script | `scripts/bump_compose_images.py` (`--apply` rewrites the file, `--json` for machines) |
 | Branch | `chore/compose-image-bump`, force-pushed on each run so only one pull request is ever open |
 | Checks | the compose file is parsed again before the commit (PyYAML), and the service count is asserted |
@@ -31,11 +31,12 @@ The comparison only covers the images whose tag is produced by a build workflow:
 | Bumped | Why |
 | --- | --- |
 | `nyx_ui`, `nyx_rest` | `build-container.yml` in each repository |
+| `nyx_rest_helper` | same workflow, with `Dockerfilehelper` — built from the API image of the same tag, so its version is the API's |
 | `nyx-reportrunner`, `nyx_lambda` | `build-reportrunner.yml` / `build-lambda.yml` in `nyx_containers` |
 
 Three other groups are left alone:
 
-- `nyx_reportscheduler`, `nyx_rest_helper`, `nyx_mobile`, `nyx_xlsimport`, `monitordocker` — these
+- `nyx_reportscheduler`, `nyx_mobile`, `nyx_xlsimport`, `monitordocker` — these
   have no build workflow, their Docker Hub tags are pushed by hand and can lag years behind the
   source (`monitordocker` publishes v0.4.10, dated 2018, while the script in the repository is
   1.1.0). Comparing versions there would propose an older build dressed as a newer one, so they are

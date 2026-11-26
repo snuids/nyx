@@ -50,7 +50,6 @@ truth. This table names the repository and the role.
 | `curator` | `snuids/curator` | Index retention |
 | `elastalertrest` | `bitsensor/elastalert` | Alerting (rules are not tracked, see below) |
 | `monitordocker` | `snuids/monitordocker` | Container health and infrastructure metrics into Elasticsearch |
-| `logioweb`, `harvester` | `blacklabelops/logio` | Live log UI over the shared `logs` volume |
 | `kibana` | `elastic/kibana` 7.2 | Stock Kibana at `/kibana/` |
 | `kibananyx` | `elastic/kibana` 7.2 | Kibana with the NYX dashboards at `/kibananyx/` |
 | `cerebro` | `lmenezes/cerebro` | Elasticsearch cluster administration |
@@ -93,7 +92,7 @@ entry and a `location` block.
 | `/cerebro/` | `cerebro` | Lua check of `nyx_cerebro` cookie |
 | `/amqc/` | `amqc` | Lua check of `nyx_amqc` cookie |
 | `/ipython/` | `anaconda` | Lua check of `nyx_anaconda` cookie |
-| `/logs/` | `logioweb` | Lua check of `nyx_logs` cookie |
+| `/logs/` | `nyx_logs` | Lua check of `nyx_logs` cookie |
 | `/generatedreports/` | static files | none (files are unguessable UUIDs) |
 | `/temp/`, `/public/` | static files | none |
 

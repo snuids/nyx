@@ -18,7 +18,7 @@ An easy way to list the running containers is to use the following command:
 This command should return every service of the compose file (`nginx`, `nyx_ui`, `nyx_restapi`,
 `nyx_mobile`, `nyx_lambda`, `nyx_reportrunner_1`, `nyx_scheduler`,
 `nyx_rest_helper`, `camelworker1`, `amqc`, `nodered`, `curator`, `elastalertrest`,
-`monitordocker`, `logioweb`, `harvester`, `kibana`, `kibananyx`, `cerebro`, `esnodebal`,
+`monitordocker`, `nyx_logs`, `kibana`, `kibananyx`, `cerebro`, `esnodebal`,
 `logstash`, `anacondab`, `redis`, `postgres`). Image tags will differ from the sample below —
 they are pinned in `docker-compose.yml`, not here.
 

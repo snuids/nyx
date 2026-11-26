@@ -38,41 +38,10 @@ services:
       - PGUSER=nyx
 
 ############################################################################################
-  logioweb:
-    hostname: air-logs
-    container_name: logioweb
-    image: 'blacklabelops/logio:latest'
-    volumes:
-      - '/opt/server'
-
-#############################################################################################
-  harvester:
-    image: 'blacklabelops/logio:latest'
-    container_name: harvester
-    environment:
-      - 'DELAYED_START=10'
-      - 'LOGIO_HARVESTER_NODENAME=RPinumLogs'
-      - 'LOGIO_HARVESTER1STREAMNAME=RestAPI' 
-      - 'LOGIO_HARVESTER1LOGSTREAMS=/var/log/logs' 
-      - 'LOGIO_HARVESTER1FILEPATTERN=RestAPIG.log'
-      - 'LOGIO_HARVESTER2STREAMNAME=CamelWorker1'
-      - 'LOGIO_HARVESTER2LOGSTREAMS=/var/log/logs'
-      - 'LOGIO_HARVESTER2FILEPATTERN=camelworker1.log'
-      - 'LOGIO_HARVESTER3STREAMNAME=ElastAlert'
-      - 'LOGIO_HARVESTER3LOGSTREAMS=/var/log/logs'
-      - 'LOGIO_HARVESTER3FILEPATTERN=ElastAlert.log'
-      - 'LOGIO_HARVESTER5STREAMNAME=ReportRunner1'
-      - 'LOGIO_HARVESTER5LOGSTREAMS=/var/log/logs'
-      - 'LOGIO_HARVESTER5FILEPATTERN=ReportRunner_1.log'
-      - 'LOGIO_HARVESTER6STREAMNAME=Lambdas'
-      - 'LOGIO_HARVESTER6LOGSTREAMS=/var/log/logs'
-      - 'LOGIO_HARVESTER6FILEPATTERN=NYX_Lambda_2.log'
-    volumes:
-      - '../logs/:/var/log/logs/'
-    links:
-      - logioweb:logio
-    user: root
-    command: harvester
+# log.io (`logioweb` + `harvester`) used to tail the shared `logs` volume and stream it to a
+# socket.io UI at `/logs/`. It is gone: the console's own log browser (`nyx_logs`, built with
+# base `/logs/`) serves that URL now, so the two services and the floating `:latest` tag they
+# carried are retired here.
 
 ################################################################################################
 

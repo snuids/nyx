@@ -62,9 +62,8 @@ nyx/
 │       └── patterns/camelworker  # grok pattern used by the pipeline
 ├── nginx/
 │   ├── default.conf            # reverse proxy / routing table for the whole platform
-│   ├── server.crt              # local development certificate
-│   └── server.csr
 │                               # logs, *.pid and .htpasswd are git-ignored at runtime
+│                               # no certificate here: `certgen` writes the pair into ../certs/
 ├── reportrunner/
 │   ├── jasper/                 # Jasper report definitions (.jrxml) and compiled (.jasper)
 │   │   ├── myjasper.jrxml
@@ -103,7 +102,7 @@ These are bind-mounted from the host, are listed in `.gitignore` or simply absen
 clone, and must exist before the first start:
 
 ```text
-nyx/logs/                       # logs of every service (also harvested by Log.io and Logstash)
+nyx/logs/                       # logs of every service (also harvested by Logstash)
 nyx/generatedreports/           # files produced by the report runner
 nyx/generatedreports/rapi/      # API-generated files
 nyx/backup/                     # working directory for the backup scripts / Camel worker

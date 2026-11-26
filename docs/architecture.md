@@ -16,7 +16,7 @@ flowchart LR
     redis[(Redis)]
     amq[(ActiveMQ)]
     es[(Elasticsearch 7.2)]
-    obs["Kibana · Cerebro<br/>Logstash · Curator<br/>ElastAlert · Log.io"]
+    obs["Kibana · Cerebro<br/>Logstash · Curator<br/>ElastAlert · nyx_logs"]
 
     clients --> nginx --> app
     app --> pg
@@ -112,7 +112,7 @@ created by Docker as `root`, which then breaks the workers. Create them before t
 
 | Host path | Used by | Content |
 | --- | --- | --- |
-| `nyx/logs` | almost every container | per-service logs, also harvested by Log.io and Logstash |
+| `nyx/logs` | almost every container | per-service logs, also harvested by Logstash |
 | `nyx/generatedreports`, `.../rapi` | report runner, API, rest_helper | generated reports and exports, served at `/generatedreports/` |
 | `nyx/backup`, `nyx/config_backup` | Camel worker, backup scripts | working directories for the ETL and the backups |
 | `nyx/notebooks` | lambda, anaconda | notebooks, including `notebooks/Lambdas` |

@@ -10,12 +10,15 @@
 ```shell
 mkdir -p logs generatedreports/rapi backup config_backup notebooks \
          node_red_data public_www reportrunnerold reportrunner/generated
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout certs/nyx.key -out certs/nyx.crt -subj "/CN=localhost"
 cd docker-compose
 cp .env.example .env     # set PG_PASSWORD and AMQC_PASSWORD at least
 docker compose up -d
 ```
+
+The TLS pair is not shipped: the `certgen` service generates a self-signed one into `nyx/certs/`
+on the first start (git-ignored) and leaves an existing pair untouched. `NYX_HOST` names it. For
+a real instance, drop your certificate and key in `nyx/certs/` before the first start, or restart
+`nginx` afterwards — see [`nyx/certs/README.md`](../nyx/certs/README.md).
 
 ## Is it healthy?
 
@@ -188,7 +191,7 @@ Two habits that save time:
   `nyx/elastalert` and `nyx/scripts`.
 - Replace `nyx/certs/nyx.crt` and generate `nyx.key`; never reuse the demo pair.
 - Fill `.htpasswd` inside the nginx container and keep `auth_basic` on the administrative routes
-  (Node-RED, Kibana, Cerebro, Elasticsearch, Log.io, Jupyter).
+  (Node-RED, Kibana, Cerebro, Elasticsearch, Jupyter).
 - Do not publish ports 9200, 5444, 61613-61616 or 5801 (Kibana bypasses the cookie check).
 - Set `server_name` in `nyx/nginx/default.conf` and keep the certificate valid.
 - Point `OUTPUT_URL` at the real host: exported files are served from there.

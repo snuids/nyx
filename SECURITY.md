@@ -39,8 +39,9 @@ Before running NYX on any network you do not fully control:
 1. Generate new values for every variable in `nyx/docker-compose/.env` (see `.env.example`).
 2. Rotate the credentials referenced by `nyx/camelworkers/camelworker1/config.xml`,
    `nyx/elastalert/` and `nyx/scripts/*.sh`.
-3. Replace `nyx/certs/nyx.crt` and `nyx/certs/nyx.key` with a certificate you issued.
+3. Replace the TLS pair in `nyx/certs/` with a certificate you issued. The package ships none:
+   `certgen` generates a self-signed one at first start, and that one is only for a local instance.
 4. Enable `auth_basic` in `nyx/nginx/default.conf` on the administration routes (Kibana,
-   Node-RED, Cerebro, Log.io) and create the matching `.htpasswd` file.
+   Node-RED, Cerebro) and create the matching `.htpasswd` file.
 5. Keep ports `5444`, `61613`–`61616` and `9200` closed to the internet; only `80`/`443` need
    to be reachable.

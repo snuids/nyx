@@ -26,17 +26,12 @@ mkdir -p logs generatedreports/rapi backup config_backup notebooks \
          node_red_data public_www reportrunnerold reportrunner/generated
 ```
 
-## Step 2 — provide a TLS key
+## Step 2 — nothing to do about TLS
 
-`nyx/certs/nyx.crt` is committed but `nyx.key` is **git-ignored**, so a fresh clone has no
-private key and nginx will not start. From the `nyx/` folder, generate a self-signed pair (this
-replaces the demo certificate; use a real one for anything beyond local testing):
-
-```shell
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout certs/nyx.key -out certs/nyx.crt \
-  -subj "/CN=localhost"
-```
+The package ships no certificate: the `certgen` service in `docker-compose.yml` generates a
+self-signed pair into `nyx/certs/` (git-ignored) the first time the stack starts, and does nothing
+if a pair is already there. `NYX_HOST` sets the name on it (`localhost` by default, which is what
+this walkthrough needs). For your own certificate, see [`nyx/certs/README.md`](nyx/certs/README.md).
 
 ## Step 3 — create the `.env` file
 
@@ -103,7 +98,8 @@ Use a browser to open:
 
 > https://localhost/
 
-The certificate in `nyx/certs/` is a demo one, so the browser will warn — accept the exception.
+The certificate in `nyx/certs/` is the self-signed one `certgen` generated, so the browser will
+warn — accept the exception. It is valid for `localhost` and `127.0.0.1`.
 
 Check the API health endpoint:
 
@@ -134,7 +130,7 @@ panels are proxied on the same host:
 | `/amqc/` | ActiveMQ monitoring console |
 | `/ipython/` | Jupyter notebooks |
 | `/nodered/` | Node-RED flow editor |
-| `/logs/` | Log.io live logs |
+| `/logs/` | the console's log and file browser |
 | `/generatedreports/` | Files produced by the report runner |
 
 Some of these routes are protected by Basic Auth (`.htpasswd` inside the nginx container);

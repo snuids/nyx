@@ -10,6 +10,10 @@
 *.pem
 *.p12
 
+# Generated TLS material — the package ships none, `certgen` writes the pair at first start
+nyx/certs/*.crt
+nyx/certs/*.csr
+
 # nginx runtime files (logs are written to nyx/logs at runtime)
 nyx/nginx/*.log
 nyx/nginx/*.pid

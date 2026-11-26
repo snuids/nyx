@@ -347,9 +347,45 @@ services:
     restart: always
 
 ##############################
+  # A fresh clone has no TLS pair, and a distribution must not ship one: a certificate in a
+  # package is either useless (a self-signed demo nobody rotates) or the operator's own material
+  # leaking into every fork. This one-shot generates a self-signed pair into `nyx/certs/`
+  # (git-ignored) when it is missing, and leaves an existing pair alone — so a real certificate
+  # dropped there by the operator is never overwritten.
+  #
+  # Set NYX_HOST to the name browsers will use (`localhost` by default): it becomes the CN and
+  # lands in the subjectAltName alongside `localhost` and 127.0.0.1.
+  certgen:
+    image: alpine/openssl:3.5.9
+    container_name: certgen
+    volumes:
+      - '../certs/:/certs/'
+    environment:
+      - NYX_HOST=${NYX_HOST:-localhost}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        if [ -s /certs/nyx.crt ] && [ -s /certs/nyx.key ]; then
+          echo "certgen: an existing TLS pair is in place, leaving it untouched"
+          exit 0
+        fi
+        echo "certgen: generating a self-signed pair for $${NYX_HOST}"
+        openssl req -x509 -nodes -newkey rsa:2048 -days 825 \
+          -keyout /certs/nyx.key -out /certs/nyx.crt \
+          -subj "/CN=$${NYX_HOST}" \
+          -addext "subjectAltName=DNS:$${NYX_HOST},DNS:localhost,IP:127.0.0.1"
+        chmod 600 /certs/nyx.key
+        echo "certgen: done — replace nyx/certs/{nyx.crt,nyx.key} with a real certificate for production"
+
+##############################
   nginx:
     image: openresty/openresty:alpine 
     container_name: nginx
+    # nginx refuses to start without a key: generate the pair first, once.
+    depends_on:
+      certgen:
+        condition: service_completed_successfully
     ports:
       - "5701:5701"
       - "5702:5702"

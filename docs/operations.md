@@ -75,6 +75,26 @@ A release commit therefore reads `v3.29.32 Add an Activity page`, not `v3.30.0 A
 bump makes the deployed version jump without telling anyone what changed, and it breaks the
 `vX.Y.Z` sequence the operators read in the console.
 
+### Tagging this repository
+
+Components have their own versions; this repository had none until `v1.0.0`, which is why a
+deployment could not be named in an incident report. It now carries its **own** sequence, tagged
+on the state of the compose file rather than on a component release:
+
+```shell
+# what is pinned right now, which is what the notes have to list
+grep -E '^\s+image:' nyx/docker-compose/docker-compose.yml | sed -E 's/^\s+image:\s*//' | sort -u
+
+git tag -a vX.Y.Z -m "vX.Y.Z <one line: what the stack pins now>"
+git push origin refs/tags/vX.Y.Z
+```
+
+Then publish the release with the pinned-image table, the upgrades an operator must know about,
+and the platform versions that did **not** move (Elasticsearch, PostgreSQL). A stack tag never
+means "the platform changed": it means "this is the combination that was deployed and verified".
+Bump the first two digits only for a platform-level change (a new service, a dropped one, a
+migration), the third for every re-tag.
+
 Kibana, Elasticsearch and PostgreSQL are pinned platform versions. Upgrading them is a separate
 operation with a data migration, not a tag change.
 

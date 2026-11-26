@@ -23,6 +23,11 @@ docker compose up -d
 Then open `https://localhost/`. Full prerequisites, including the host directories and the
 TLS key that are not in git, are in [Getting started](#getting-started).
 
+Every deployable state of the stack is tagged and documented in
+**[Releases](https://github.com/Indian-Runners/nyx/releases)** — the pinned image versions, what
+changed, and what did not move. See
+[Tagging this repository](docs/operations.md#tagging-this-repository) for how a release is cut.
+
 ![NYX overview](https://raw.githubusercontent.com/Indian-Runners/nyx/master/medias/overview.gif)
 
 ## Why NYX
